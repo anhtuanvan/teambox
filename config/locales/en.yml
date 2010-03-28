@@ -443,8 +443,9 @@ en:
         cant_be_blank: 'must not be blank'
         too_long: 'must be shorter than 255 characters'
     fields:
-      name: What needs to be done?
-      due_on: Needs to be done before... <i>(optional)</i>
+      name: Task title
+      body: <i>Optional:</i> Describe what needs to be done.
+      due_on: <i>Optional:</i> Needs to be done before...
     assigned:
       assigned_to: "Assigned to {{user}}"
     due_on:

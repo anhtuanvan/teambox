@@ -14,9 +14,10 @@ class Task < RoleRecord
                   :previous_status,
                   :previous_assigned_id,
                   :status,
-                  :due_on
+                  :due_on,
+                  :body
 
-  attr_accessor :previous_status, :previous_assigned_id
+  attr_accessor :previous_status, :previous_assigned_id, :body
 
   STATUSES = {:new => 0, :open => 1, :hold => 2, :resolved => 3, :rejected => 4}
 

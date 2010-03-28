@@ -53,7 +53,7 @@ table.task_list
       :padding 2px 5px
       :border-top solid 1px rgb(100,100,100)
     td.name
-      span
+      span.assigned
         :color rgb(100,100,100)
         :padding 1px 5px
         :margin-right 5px
@@ -68,6 +68,9 @@ table.task_list
         a:hover
           :text-decoration none
           :color rgb(0,0,0)
+      a.new_task_link
+        :color rgb(100,100,100)
+        :font-size 11px
       span.status
         :display none
     tr.overdue

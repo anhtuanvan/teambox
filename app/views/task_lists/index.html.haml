@@ -12,7 +12,7 @@
 
   - if @task_lists.any?
     #task_lists
-      = tabular_task_lists(@current_project,@task_lists,@sub_action)
+      = render_task_lists(@current_project,@task_lists,@sub_action)
   - else
     = task_list_primer(@current_project)
   

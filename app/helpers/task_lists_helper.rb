@@ -69,11 +69,10 @@ module TaskListsHelper
       :collection => task_lists, :locals => { :project => project }
   end
 
-  def render_task_list(project,task_list,current_target)
+  def render_task_list(project,task_list)
     render :partial => 'task_lists/task_list', :locals => {
       :project => project,
-      :task_list => task_list,
-      :current_target => current_target }
+      :task_list => task_list }
   end
 
   def task_list_form(project,task_list)
@@ -84,15 +83,11 @@ module TaskListsHelper
 
   def insert_task_list(project,task_list,sub_action)
     page.insert_html :top, "task_lists",
-      :partial => 'task_lists/tabular_task_list',
+      :partial => 'task_lists/task_list',
       :locals => {
         :project => project,
         :task_list => task_list,
         :sub_action => sub_action }
-  end
-
-  def render_task_list_with_tasks(project,task_list)
-    render :partial => 'task_lists/show', :locals => { :project => project, :task_list => task_list }
   end
 
   def reorder_task_list_link(project,task_lists)
@@ -113,8 +108,8 @@ module TaskListsHelper
     end
   end
 
-  def tabular_task_lists(project,task_lists,sub_action)
-    render :partial => 'task_lists/tabular_task_list',
+  def render_task_lists(project,task_lists,sub_action)
+    render :partial => 'task_lists/task_list',
       :collection => task_lists,
       :as => :task_list,
       :locals => {
@@ -122,8 +117,8 @@ module TaskListsHelper
         :sub_action => sub_action }
   end
 
-  def tabular_task_list(project,task_list,sub_action)
-    render :partial => 'task_lists/tabular_task_list',
+  def render_task_list(project,task_list,sub_action)
+    render :partial => 'task_lists/task_list',
     :locals => {
       :project => project,
       :task_list => task_list,
@@ -135,15 +130,6 @@ module TaskListsHelper
     render :partial => 'task_lists/column', :locals => {
         :project => project,
         :task_lists => task_lists,
-        :sub_action => sub_action,
-        :current_target => current_target }
-  end
-
-  def list_task_lists(project,task_lists,sub_action,current_target=nil)
-    render :partial => 'task_lists/task_list_with_tasks',
-      :collection => task_lists, :as => :task_list,
-      :locals => {
-        :project => project,
         :sub_action => sub_action,
         :current_target => current_target }
   end
@@ -230,14 +216,6 @@ module TaskListsHelper
   def show_destroy_task_list_message(task_list)
     page.replace 'show_task_list', :partial => 'task_lists/destroy_message', :locals => {
       :task_list => task_list }
-  end
-
-  def list_sortable_task_lists(project,task_lists)
-    render :partial => 'task_lists/sortable_task_list',
-      :collection => task_lists,
-      :as => :task_list,
-      :locals => {
-        :project => project }
   end
 
   def reorder_button_loading

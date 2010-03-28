@@ -9,7 +9,7 @@
   %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
     = list_tabular_tasks(project,task_list,tasks,sub_action)
 
-    - if task_list_editable?(task_list,current_user,sub_action)
+    - if task_list_editable?(task_list,current_user,sub_action) # new task
       %tr
         %td.status
         %td.name
