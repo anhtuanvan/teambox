@@ -1,5 +1,14 @@
 - if @current_project
-  = banner(@events,@chart)
+
+  .task_header
+    - if @current_project.editable?(current_user)
+      %p.text_actions
+        %span= link_to "Reorder task lists", "#"
+
+    %h2= "Task lists for this project"
+
+  - if @current_project.editable?(current_user)
+    = task_list_form(@current_project,TaskList.new)
 
   - if @task_lists.any?
     = tabular_task_lists(@current_project,@task_lists,@sub_action)
@@ -11,11 +20,11 @@
 
 - else
   %h2= t('.tasks_for_all_projects')
-
   = tasks_for_all_projects(@tasks)
 
-  %div{ :style => 'padding-left: 20px; padding-bottom: 10px' }
+  - content_for :column do
+    = my_tasks(current_user.assigned_tasks(:all))
+  
+    %h2 Other views
     = subscribe_to_calendars_link
-
-  %div{ :style => 'padding-left: 20px; padding-bottom: 40px' }
-    = content_tag(:div, link_to(t('common.print'), task_lists_path(:format => :print)), :class => :print)
+    = print_task_lists_link

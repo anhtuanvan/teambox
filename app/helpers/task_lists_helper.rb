@@ -266,10 +266,16 @@ module TaskListsHelper
     end
   end
 
-  def print_task_lists_link(project)
-    content_tag(:div,
-      link_to(t('common.print'), project_task_lists_path(project, :format => :print)),
-      :class => :print)
+  def print_task_lists_link(project = nil)
+    if project
+      content_tag(:div,
+        link_to(t('common.print'), project_task_lists_path(project, :format => :print)),
+        :class => :print)
+    else
+      content_tag(:div,
+        link_to(t('common.print'), task_lists_path(:format => :print)),
+        :class => :print)
+    end
   end
 
   def tasks_for_all_projects(tasks)

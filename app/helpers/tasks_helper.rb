@@ -107,6 +107,13 @@ module TasksHelper
     end
   end
 
+  def sidebar_tasks(tasks)
+    render :partial => 'tasks/sidebar_task',
+      :as => :task,
+      :collection => tasks.sort { |a,b| (a.due_on || 1.year.from_now.to_date) <=> (b.due_on || 1.year.from_now.to_date) }
+    # Because of the way this sort is implemented, it might be redundant
+  end
+
   def show_archive_task_message(task)
     page.replace 'show_task', :partial => 'tasks/archive_message', :locals => {
       :task => task }
@@ -201,9 +208,8 @@ module TasksHelper
     id = check_status_type(task,status_type)
     out = "<span id='#{id}' class='task_status task_status_#{task.status_name}'>"
     out << case status_type
-    when :column  then task.comments_count.to_s
+    when :column  then localized_status_name(task)
     when :content then task.comments_count.to_s
-    when :header  then "#{localized_status_name(task)} &mdash; #{task.comments_count}"
     end
     out << "</span>"
     out

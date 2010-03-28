@@ -107,7 +107,7 @@ module JennyHelper
   end
 
   def shes_just_a_memory(*args)
-    #And she use to mean so much to me...
+    # And she used to mean so much to me...
     target = args.last
     action = target.new_record? ? 'new' : 'edit'
     [target,action]

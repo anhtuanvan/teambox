@@ -1,8 +1,8 @@
-- content_for :banner do
-  = upcoming_events(events)
-  = gantt_chart(chart)
-  .banner_navigation
-    %ul
-      %li.calendar= calendar_banner_link
-      %li.gantt_chart= gantt_banner_link
-  .clear
+.banner_navigation
+  %ul
+    %li= "View as"
+    %li.calendar= calendar_banner_link
+    %li= "or"
+    %li.gantt_chart= gantt_banner_link
+= upcoming_events(events)
+= gantt_chart(chart)

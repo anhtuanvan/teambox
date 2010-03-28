@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_filter :find_task_list, :only => [:new,:show,:destroy,:create,:update,:reorder,:archive,:unarchive,:reopen, :show_in_main_content]
   before_filter :find_task, :only => [:show,:destroy,:update,:archive,:unarchive,:watch,:unwatch,:reopen,:show_in_main_content]
+  before_filter :load_banner, :only => [:show]
   before_filter :set_page_title
 
   cache_sweeper :task_list_panel_sweeper, :only => [:create, :update, :reorder]

@@ -13,6 +13,3 @@
           = content_tag "div", [t('tasks.link.show_archived_tasks', :count => num_archived_tasks), t('tasks.link.hide_archived_tasks', :count => num_archived_tasks)].join("##"), :class => "show_archived_tasks_link_texts", :style => "display:none"
           - unless num_archived_tasks.zero?
             = link_to t('tasks.link.show_archived_tasks', :count => num_archived_tasks), "#", :class => "show_archived_tasks_link", :texts_class => "show_archived_tasks_link_texts",  :show => 'all'
-      - if task_list_editable?(task_list,current_user,sub_action)
-        = task_link(project,task_list)
-        = task_form(project,task_list,task_list.new_task(current_user))
