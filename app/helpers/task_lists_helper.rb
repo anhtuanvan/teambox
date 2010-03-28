@@ -84,12 +84,11 @@ module TaskListsHelper
 
   def insert_task_list(project,task_list,sub_action)
     page.insert_html :top, "task_lists",
-      :partial => 'task_lists/task_list_with_tasks',
+      :partial => 'task_lists/tabular_task_list',
       :locals => {
         :project => project,
         :task_list => task_list,
-        :sub_action => sub_action,
-        :current_target => nil }
+        :sub_action => sub_action }
   end
 
   def render_task_list_with_tasks(project,task_list)
@@ -116,11 +115,11 @@ module TaskListsHelper
 
   def tabular_task_lists(project,task_lists,sub_action)
     render :partial => 'task_lists/tabular_task_list',
-    :collection => task_lists,
-    :as => :task_list,
-    :locals => {
-      :project => project,
-      :sub_action => sub_action }
+      :collection => task_lists,
+      :as => :task_list,
+      :locals => {
+        :project => project,
+        :sub_action => sub_action }
   end
 
   def tabular_task_list(project,task_list,sub_action)
@@ -213,9 +212,8 @@ module TaskListsHelper
   end
 
   def delete_task_list_link(project,task_list)
-    link_to_remote t('common.delete'),
-      :url => project_task_list_path(project,task_list),
-      :loading => delete_task_list_loading(project,task_list),
+    link_to t('common.delete'),
+      project_task_list_path(project,task_list),
       :confirm => t('confirm.delete_task_list'),
       :method => :delete
   end
@@ -232,24 +230,6 @@ module TaskListsHelper
   def show_destroy_task_list_message(task_list)
     page.replace 'show_task_list', :partial => 'task_lists/destroy_message', :locals => {
       :task_list => task_list }
-  end
-
-  def update_active_task_list(project,task_list)
-    page.replace_html 'content', :partial => 'task_lists/show',
-      :locals => {
-        :project => project,
-        :task_list => task_list }
-
-    item_list_id = task_list_id(:item,project,task_list)
-    page.select('.task').each do |e|
-      e.removeClassName('active_new')
-      e.removeClassName('active_open')
-      e.removeClassName('active_hold')
-      e.removeClassName('active_resolved')
-      e.removeClassName('active_rejected')
-    end
-    page.select('.task_list').invoke('removeClassName','active_list')
-    page[item_list_id].addClassName('active_list')
   end
 
   def list_sortable_task_lists(project,task_lists)

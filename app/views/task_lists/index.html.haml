@@ -11,7 +11,8 @@
     = task_list_form(@current_project,TaskList.new)
 
   - if @task_lists.any?
-    = tabular_task_lists(@current_project,@task_lists,@sub_action)
+    #task_lists
+      = tabular_task_lists(@current_project,@task_lists,@sub_action)
   - else
     = task_list_primer(@current_project)
   

@@ -7,15 +7,6 @@ class TasksController < ApplicationController
   cache_sweeper :task_list_panel_sweeper, :only => [:create, :update, :reorder]
 
   def show
-    if @task.archived?
-      @sub_action = 'archived'
-      @task_lists = @current_project.task_lists.with_archived_tasks
-    else
-      @task_lists = @current_project.task_lists
-      @sub_action = 'all'
-    end
-    @task = @current_project.tasks.find(params[:id])
-
     @comments = @task.comments
     @comment = @current_project.new_task_comment(@task)
 
@@ -44,7 +35,8 @@ class TasksController < ApplicationController
       @comment = @current_project.new_task_comment(@task)
     end
     respond_to do |format|
-      format.m { redirect_to project_task_lists_path(@current_project) }
+      format.html { redirect_to [@current_project,@task_list,@task] }
+      format.m    { redirect_to project_task_lists_path(@current_project) }
       format.js do
         if @task.valid?
           render :partial => 'tasks/task',
