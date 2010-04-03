@@ -36,11 +36,11 @@ module BannerHelper
   end
 
   def calendar_banner_link
-    link_to "Calendar", "#", :id => 'calendar_banner_link', :class => ('active' if current_banner?(:calendar))
+    link_to "Calendar", "#", :id => 'show_calendar_link', :class => ('active' if current_banner?(:calendar))
   end
 
   def gantt_banner_link
-    link_to 'Gantt Chart', "#", :id => 'gantt_banner_link', :class => ('active' if current_banner?(:gantt))
+    link_to 'Gantt Chart', "#", :id => 'show_gantt_chart_link', :class => ('active' if current_banner?(:gantt))
   end
 
   def banner(events,chart)

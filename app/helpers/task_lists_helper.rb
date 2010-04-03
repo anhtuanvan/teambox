@@ -1,10 +1,10 @@
 module TaskListsHelper
 
   def task_list_range(task_list)
-    start_on  = task_list.start_on.nil? ? task_list.start_on : nil
-    finish_on = task_list.finish_on.nil? ? task_list.finish_on : nil
+    start_on  = task_list.try(:start_on)
+    finish_on = task_list.try(:finish_on)
 
-    return unless (start_on.nil? && finish_on.nil?) || (start_on == finish_on)
+    return nil unless start_on == finish_on
     out = [I18n.l(start_on, :format => '%b %d'),I18n.l(finish_on, :format => '%b %d')].join(" - ")
     content_tag(:span,out,:class => 'range')
   end
@@ -50,7 +50,7 @@ module TaskListsHelper
     sub_action != 'archived' && task_list.editable?(user)
   end
 
-  def assign_tasks(project,task_list,sub_action)
+  def assign_tasks(project,task_list,sub_action = 'all_with_archived')
     if sub_action == 'mine'
       person = project.people.find_by_user_id(current_user.id)
       task_list.tasks.unarchived.find(:all, :conditions => { :assigned_id => person.id} )
@@ -208,12 +208,6 @@ module TaskListsHelper
       :task_list => task_list }
   end
 
-  def reorder_button_loading
-    update_page do |page|
-      page['reorder_link'].className = 'loading_button'
-    end
-  end
-
   def print_task_lists_link(project = nil)
     if project
       content_tag(:div,
@@ -230,12 +224,12 @@ module TaskListsHelper
     render :partial => 'task_lists/tasks_for_all_projects', :locals => { :tasks => tasks }
   end
 
-  def maybe_cache_task_list_panel(task_list, current_target, &block)
-    if current_target.nil? or (current_target.respond_to?(:task_list) and current_target.task_list != task_list)
-      cache(task_list.cache_key_for_sidebar_panel, &block)
-    else
-      block.call
-    end
-  end
+  # def maybe_cache_task_list_panel(task_list, current_target, &block)
+  #   if current_target.nil? or (current_target.respond_to?(:task_list) and current_target.task_list != task_list)
+  #     cache(task_list.cache_key_for_sidebar_panel, &block)
+  #   else
+  #     block.call
+  #   end
+  # end
 
 end

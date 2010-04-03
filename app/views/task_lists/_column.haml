@@ -3,18 +3,25 @@
 - else
   %p= t('.cant_create')
 
-- if location_name == 'show_tasks'
-  %h2= "This task"
-  %p
+- case location_name
+  - when 'show_tasks'
+    %h2= "This task"
     %p
-      = "Status:"
+      %strong= "Status:"
       = task_status(@task,:column)
     - if @task.due_on
       %p
-        = "Due on:"
+        %strong= "Due on:"
         = render_due_on(@task,current_user)
     %p= render_assignment(@task,current_user)
-  
+  - when 'show_task_lists'
+    %h2= "This task list"
+    %p
+      %strong= "Starts on:"
+      = @task_list.start_on || "Undefined"
+    %p
+      %strong= "Ends on:"
+      = @task_list.finish_on || "Undefined"
 
 = banner(@events,@chart)
 
