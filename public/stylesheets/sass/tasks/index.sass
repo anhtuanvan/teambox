@@ -2,57 +2,53 @@
   table.task_list td.status
     :padding-left 20px
 
+.task_list_container
+  :margin 10px 0 20px
+
+.new_task
+  :font-size 11px
+  :padding
+    :top 5px
+    :left 50px
+  a
+    :color rgb(100,100,100) 
+
 table.task_list
   :width 100%
-  :margin-bottom 20px
-  th
-    :font-size 14px
-    :border-bottom solid 1px rgb(200,200,200)
-    :padding-bottom 5px    
-  td
-    :padding 4px 5px
-    span.task_status
-      :font-size 11px
-  td.status
-    :text-align right
-    :width 30px
-    :padding-top 6px
-    span
-      :display block
-      :width 23px
-      :padding 0
-      :text-align center
-  .comments_count
-    :float right
-    :padding 0
-      :top 4px
-    :text-transform none
-    :font-size 11px
-    :-moz-border-radius 0
-    :-webkit-border-radius 0px
-    :color rgb(150,150,150)
-    :background rgb(255,255,255)
-    :border none
+  a
+    :color rgb(50,50,50)
   thead
-    tr
-      span
-        :color rgb(100,100,100)
-        :padding 1px 5px
-        :margin-right 5px
-        :font-size 11px
-        :-moz-border-radius 4px
-        :-webkit-border-radius 4px
-        :background rgb(245,245,245)
-        :border solid 1px rgb(225,225,225)
-        :text-transform uppercase
-  tbody
     th
-      :font-size 11px
-      :background rgb(200,200,200)
+      :font-size 14px
+      :border-bottom solid 1px rgb(240,240,240)
+      :padding-bottom 5px
       :color rgb(100,100,100)
-      :padding 2px 5px
-      :border-top solid 1px rgb(100,100,100)
+      .comments_count
+        :float right
+        :padding 0
+          :top 4px
+        :text-transform none
+        :font-size 11px
+        :color rgb(150,150,150)
+        :background none
+      a
+        :font-weight bold
+  tbody
+    td
+      :padding 4px 5px
+      span.task_status
+        :font-size 11px
+    td.status
+      :text-align right
+      :width 30px
+      :padding-top 6px
+      span
+        :display block
+        :width 23px
+        :padding 0
+        :text-align center
     td.name
+      :font-size 12px
       span.assigned
         :color rgb(100,100,100)
         :padding 1px 5px
@@ -68,9 +64,6 @@ table.task_list
         a:hover
           :text-decoration none
           :color rgb(0,0,0)
-      a.new_task_link
-        :color rgb(100,100,100)
-        :font-size 11px
       span.status
         :display none
     tr.overdue

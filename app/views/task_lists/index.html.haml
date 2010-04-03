@@ -10,10 +10,10 @@
   - if @current_project.editable?(current_user)
     = task_list_form(@current_project,TaskList.new)
 
-  - if @task_lists.any?
-    #task_lists
-      = render_task_lists(@current_project,@task_lists,@sub_action)
-  - else
+  #task_lists
+    = render_task_lists(@current_project,@task_lists,@sub_action)
+
+  - if @task_lists.empty?
     = task_list_primer(@current_project)
   
   - content_for :column do

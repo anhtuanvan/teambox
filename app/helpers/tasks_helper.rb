@@ -249,16 +249,6 @@ module TasksHelper
     drag_image if task.editable?(current_user)
   end
 
-  def list_tabular_tasks(project,task_list,tasks,sub_action)
-    render :partial => 'tasks/td_task',
-      :collection => tasks,
-      :as => :task,
-      :locals => {
-        :project => project,
-        :task_list => task_list,
-        :sub_action => sub_action }
-  end
-
   def due_on(task)
     if task.overdue?
       t('tasks.overdue', :days => task.overdue) + " (#{I18n.l(task.due_on, :format => '%b %d')})"
@@ -315,7 +305,7 @@ module TasksHelper
   end
 
   def insert_task(project,task_list,task)
-    page.insert_html :bottom, task_list_id(:the_tasks,project,task_list),
+    page.insert_html :bottom, task_list_id(:with_main_tasks,project,task_list),
       :partial => 'tasks/task',
       :locals => {
         :task => task,

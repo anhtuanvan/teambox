@@ -443,9 +443,12 @@ en:
         cant_be_blank: 'must not be blank'
         too_long: 'must be shorter than 255 characters'
     fields:
-      name: Task title
-      body: <i>Optional:</i> Describe what needs to be done.
-      due_on: <i>Optional:</i> Needs to be done before...
+      title: New Task
+      task: "Choose an actionable task. The more specific, the better."
+      name: Enter a Task title <i>eg. Upload Logo Proposal</i>
+      optional: You can provide better instructions for this Task below.
+      body: What needs to be done? <i>optional</i>
+      due_on: Needs to be done before... <i>optional</i>
     assigned:
       assigned_to: "Assigned to {{user}}"
     due_on:
@@ -565,7 +568,7 @@ en:
     fields:
       title: New Task List
       task_list: A task lists defines a milestone for your project. Inside a task list you can create Tasks and assign them to people.
-      name: "Choose a name for this Task List <i>eg: Prepare a Prototype</i>"
+      name: "Choose a name for this Task List <i>eg. Prepare a Prototype</i>"
       optional: "If you starting and ending dates, this task will be displayed in the GANTT chart"
       start_on: Starts on... <i>optional</i>
       finish_on: End on... <i>optional</i>
@@ -637,6 +640,9 @@ en:
       commented_on_a_task_list: "-"
       confirm_delete: Are you sure you want to delete this comment?
       hours_hrs: "{{hours}}H"
+    hours:
+      add_hours: Hours
+      hours: How many hours did you put into this task?
     new:
       assigned_to_nobody: 'Unassigned'
       assigned_to: "Assigned to:"

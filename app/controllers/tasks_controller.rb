@@ -37,18 +37,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { redirect_to [@current_project,@task_list,@task] }
       format.m    { redirect_to project_task_lists_path(@current_project) }
-      format.js do
-        if @task.valid?
-          render :partial => 'tasks/task',
-          :locals => {
-            :task => @task,
-            :project => @current_project,
-            :task_list => @task_list,
-            :current_target => nil }
-        else
-          render :text => @task.errors.full_messages.join(" "), :status => 403
-        end
-      end
+      format.js
     end
   end
 

@@ -8,7 +8,7 @@ class Task
   def before_save
     unless position
       last_position = task_list.tasks.first(:select => 'position')
-      self.position = last_position.nil? ? 1 : last_position.position.succ
+      self.position = last_position.try(:position).try(:succ) || 1
     end
     if assigned.try(:user) && watchers_ids && !watchers_ids.include?(assigned.user.id)
       add_watcher(assigned.user)
@@ -28,7 +28,7 @@ class Task
   protected
   
     def create_comment_if_present
-      if @body
+      if @body && !@body.empty?
         comment = comments.new
         comment.user = user
         comment.body = @body

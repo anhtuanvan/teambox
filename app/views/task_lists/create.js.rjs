@@ -11,10 +11,8 @@ if @task_list.errors.empty?
 
   page[link_id].show
   page[form_id].hide
+  page[:primer].remove
   page << "Form.reset('#{form_id}')"
-
-# Is this needed here?
-#   page.reload_javascript_events
 else
   page[form_id].addClassName('form_error')
   page.show_form_errors(@task_list,form_id)

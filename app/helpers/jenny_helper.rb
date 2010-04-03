@@ -51,6 +51,7 @@ module JennyHelper
 
     update_page do |page|
       if target.new_record?
+        page.toggle(link_id)
         page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
       else
         page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
