@@ -204,8 +204,6 @@ Event.addBehavior({
     $(this).update($(this).nextText(linkTexts));
     e.stop();
   },
-
-
 });
 
 Event.addBehavior.reassignAfterAjax = true;

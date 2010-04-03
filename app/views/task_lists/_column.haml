@@ -9,9 +9,10 @@
     %p
       = "Status:"
       = task_status(@task,:column)
-    %p
-      = "Due on:"
-      = render_due_on(@task,current_user)
+    - if @task.due_on
+      %p
+        = "Due on:"
+        = render_due_on(@task,current_user)
     %p= render_assignment(@task,current_user)
   
 

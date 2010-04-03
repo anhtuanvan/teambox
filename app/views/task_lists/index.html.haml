@@ -3,7 +3,9 @@
   .task_header
     - if @current_project.editable?(current_user)
       %p.text_actions
-        %span= link_to "Reorder task lists", "#"
+        %span
+          = link_to "Reorder task lists", "#", :id => :reorder_task_lists_link
+          = link_to "Done reordering", "#", :id => :done_reordering_task_lists_link, :style => 'display:none'
 
     %h2= "Task lists for this project"
 

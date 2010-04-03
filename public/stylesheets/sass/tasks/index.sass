@@ -13,10 +13,23 @@
   a
     :color rgb(100,100,100) 
 
+.task_list_container.reordering
+  th
+    :border none
+    :font-size 16px
+    :padding-bottom 5px
+  img.drag
+    :display inline-block
+    :margin-right 20px
+  tbody, .new_task
+    :display none
+
 table.task_list
   :width 100%
   a
     :color rgb(50,50,50)
+  img.drag
+    :display none
   thead
     th
       :font-size 14px

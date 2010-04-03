@@ -5,6 +5,7 @@
       %tr
         %th{:colspan => 4}
           = comments_count(task_list,:content)
+          = drag_image
           = the_task_list_link(task_list)
     %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
       = list_tasks(project,task_list,tasks,sub_action)

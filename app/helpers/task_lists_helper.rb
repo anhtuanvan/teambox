@@ -90,16 +90,6 @@ module TaskListsHelper
         :sub_action => sub_action }
   end
 
-  def reorder_task_list_link(project,task_lists)
-    link_to_remote content_tag(:span,t("task_lists.link.reorder")),
-      :url => sortable_project_task_lists_path(project),
-      :loading => reorder_button_loading,
-      :method => :get,
-      :html => {
-        :class => "reorder_task_list_link",
-        :id => 'reorder_link' }
-  end
-
   def reorder_task_lists(project,task_lists)
     update_page do |page|
       page << "$$('.tasks').each(function(task){ task.hide(); })"

@@ -188,7 +188,7 @@ module ApplicationHelper
   end
 
   def drag_image
-    image_tag('drag.png', :class => 'drag', :style => 'display: none')
+    image_tag('drag.png', :class => 'drag')
   end
 
   def remove_image
