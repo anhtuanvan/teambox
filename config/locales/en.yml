@@ -563,8 +563,10 @@ en:
       title: All Archived Tasks
       description: You're currently looking at archived tasks. These are tasks that have been closed.
     fields:
+      title: New Task List
       task_list: A task lists defines a milestone for your project. Inside a task list you can create Tasks and assign them to people.
-      name: Task List name
+      name: "Choose a name for this Task List <i>eg: Prepare a Prototype</i>"
+      optional: "If you starting and ending dates, this task will be displayed in the GANTT chart"
       start_on: Starts on... <i>optional</i>
       finish_on: End on... <i>optional</i>
     link:

@@ -50,7 +50,13 @@ module JennyHelper
     form_id   = js_id("#{action}_form",*args)
 
     update_page do |page|
-      target.new_record? ? page.toggle(form_id,link_id) : page.toggle(form_id,header_id)
+      if target.new_record?
+        page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
+      else
+        page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
+        page.visual_effect(:toggle_blind,header_id,:duration => 0.3)
+      end
+      
       page << "Form.reset('#{form_id}')"
       page << "if($('#{form_id}').hasClassName('form_error')){ $('#{form_id}').removeClassName('form_error') }"
       page.select("##{form_id} .error").each {|e|e.remove}
