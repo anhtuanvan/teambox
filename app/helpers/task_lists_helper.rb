@@ -50,25 +50,6 @@ module TaskListsHelper
     task_list.editable?(user)
   end
 
-  # def assign_tasks(project,task_list,sub_action = 'all_with_archived')
-  #   if sub_action == 'mine'
-  #     person = project.people.find_by_user_id(current_user.id)
-  #     task_list.tasks.unarchived.find(:all, :conditions => { :assigned_id => person.id} )
-  #   elsif sub_action == 'archived'
-  #     task_list.tasks.archived
-  #   elsif sub_action == 'all'
-  #     task_list.tasks.unarchived
-  #   elsif sub_action == 'all_with_archived'
-  #     task_list.tasks
-  #   end
-  # end
-  # 
-  def archived_task_lists(project,task_lists)
-    render :partial => 'task_lists/archived_task_list_with_tasks',
-      :as => :task_list,
-      :collection => task_lists, :locals => { :project => project }
-  end
-
   def render_task_list(project,task_list)
     render :partial => 'task_lists/task_list', :locals => {
       :project => project,

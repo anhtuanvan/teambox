@@ -492,7 +492,7 @@ en:
       resolved: resolved
       rejected: rejected
     my_tasks:
-      my_tasks: My tasks
+      my_tasks: My tasks for all projects
   notes:
     actions:
       delete_confirm: Are you sure you want to delete this note?

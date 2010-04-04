@@ -19,10 +19,15 @@ class Task < RoleRecord
 
   attr_accessor :previous_status, :previous_assigned_id, :body
 
+  # IDs equal or bigger than :resolved will be considered as archived tasks
   STATUSES = {:new => 0, :open => 1, :hold => 2, :resolved => 3, :rejected => 4}
 
   ACTIVE_STATUS_NAMES = [ :new, :open ]
   ACTIVE_STATUS_CODES = ACTIVE_STATUS_NAMES.map { |status_name| STATUSES[status_name] }
+
+  def archived?
+    [STATUSES[:rejected],STATUSES[:resolved]].include?(status)
+  end
 
   def status_new?
     STATUSES[:new] == status
@@ -40,20 +45,10 @@ class Task < RoleRecord
     [STATUSES[:rejected],STATUSES[:resolved]].include?(status)
   end
 
-  def reopen
-    self.status = Task::STATUSES[:open]
-    self.archived = false
-  end
-
   def status_name
     key = nil
     STATUSES.each{|k,v| key = k.to_s if status.to_i == v.to_i }
     key
-  end
-
-  def update_counter_cache
-    self.task_list.archived_tasks_count = Task.count(:conditions => { :archived => true, :task_list_id => self.task_list.id })
-    self.task_list.save
   end
 
   def assigned?
@@ -129,7 +124,6 @@ class Task < RoleRecord
       xml.tag! 'comments-count',  comments_count
       xml.tag! 'assigned-id',     assigned_id
       xml.tag! 'status',          status
-      xml.tag! 'archived',        archived
       xml.tag! 'due-on',          due_on.to_s(:db) if due_on
       xml.tag! 'created-at',      created_at.to_s(:db)
       xml.tag! 'updated-at',      updated_at.to_s(:db)

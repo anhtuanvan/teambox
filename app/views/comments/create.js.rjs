@@ -1,4 +1,4 @@
-# Add new comments
+# Fetch new comments after post and render them
 if @new_comments
   page.insert_html :top, :comments, :text => list_comments(@new_comments, @comment.target)
   page << "$('last_comment_id').writeAttribute('value', #{@last_id})"
@@ -42,7 +42,6 @@ if @comment.errors.empty?
     
     page << "Comment.watch_edit();"
     page.reload_javascript_events
-
   end
   
   page.remove_form_errors(@comment,'new_comment')

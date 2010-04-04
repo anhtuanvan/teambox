@@ -71,27 +71,12 @@ module TasksHelper
 
   def task_archive_box(project,task_list,task)
     return unless task.editable?(current_user)
-    if task.archived
+    if task.archived?
       render :partial => 'tasks/unarchive_box', :locals => {
         :project => project,
         :task_list => task_list,
         :task => task }
-    elsif task.closed?
-      render :partial => 'tasks/archive_box', :locals => {
-        :project => project,
-        :task_list => task_list,
-        :task => task }
     end
-  end
-
-  def archive_task_button(project,task_list,task)
-    link_to_remote content_tag(:span, t('.archive')),
-      :url => archive_project_task_list_task_path(project,task_list,task),
-      :method => :put,
-      :loading => loading_archive_task,
-      :html => {
-        :class => 'button',
-        :id => 'archive_button' }
   end
 
   def loading_archive_task
@@ -112,11 +97,6 @@ module TasksHelper
       :as => :task,
       :collection => tasks#.sort { |a,b| (a.due_on || 1.year.from_now.to_date) <=> (b.due_on || 1.year.from_now.to_date) }
     # Because of the way this sort is implemented, it might be redundant
-  end
-
-  def show_archive_task_message(task)
-    page.replace 'show_task', :partial => 'tasks/archive_message', :locals => {
-      :task => task }
   end
 
   def show_destroy_task_message(task)
