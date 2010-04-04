@@ -108,9 +108,9 @@ module TasksHelper
   end
 
   def sidebar_tasks(tasks)
-    render :partial => 'tasks/sidebar_task',
+    render :partial => 'tasks/task_sidebar',
       :as => :task,
-      :collection => tasks.sort { |a,b| (a.due_on || 1.year.from_now.to_date) <=> (b.due_on || 1.year.from_now.to_date) }
+      :collection => tasks#.sort { |a,b| (a.due_on || 1.year.from_now.to_date) <=> (b.due_on || 1.year.from_now.to_date) }
     # Because of the way this sort is implemented, it might be redundant
   end
 

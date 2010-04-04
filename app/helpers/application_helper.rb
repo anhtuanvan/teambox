@@ -274,6 +274,10 @@ module ApplicationHelper
 
   def update_watching(project,user,target,state = :normal)
     page.replace 'watching', people_watching(project,user,target,state)
+    page.delay(2) do
+      page['updated_watch_state'].visual_effect :fade, :duration => 2
+    end
+    
   end
 
   def upgrade_browser
