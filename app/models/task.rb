@@ -69,7 +69,7 @@ class Task < RoleRecord
   end
 
   def overdue?
-    due_on ? Time.now.to_date > due_on : false
+    !archived? && due_on && (Time.now.to_date > due_on)
   end
 
   def due_today?

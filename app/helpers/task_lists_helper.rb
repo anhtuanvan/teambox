@@ -50,6 +50,23 @@ module TaskListsHelper
     task_list.editable?(user)
   end
 
+  def date_range_for_task_list(task_list)
+    dates = [task_list.start_on, task_list.finish_on]
+    if dates[0].nil? && dates[1].nil?
+      "No dates assigned"
+    elsif dates[0] && dates[1].nil?
+      "Starts on #{date_for_task_list(dates[0])}"
+    elsif dates[0].nil? && dates[1]
+      "Ends on #{date_for_task_list(dates[1])}"
+    else
+      "#{date_for_task_list(dates[0])} - #{date_for_task_list(dates[1])}"
+    end
+  end
+
+  def date_for_task_list(date)
+    I18n.l(date, :format => '%b %d')
+  end
+
   def render_task_list(project,task_list)
     render :partial => 'task_lists/task_list', :locals => {
       :project => project,

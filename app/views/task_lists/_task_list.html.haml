@@ -3,9 +3,18 @@
     %thead
       %tr
         %th{:colspan => 4}
-          = comments_count(task_list,:content)
           = drag_image
           = the_task_list_link(task_list)
+          .actions_menu
+            = date_range_for_task_list(task_list)
+            - if task_list_editable?(task_list,current_user)
+              = image_tag('triangle.png', :class => 'triangle')
+              .extra
+                = link_to "Rename task list"
+                = link_to "Set the starting date"
+                = link_to "Set the ending date"
+                = link_to "Archive task list and its tasks"
+                = delete_task_list_link(project,task_list)
     %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
       = list_tasks(project,task_list,task_list.tasks.unarchived)
   - if task_list_editable?(task_list,current_user)
