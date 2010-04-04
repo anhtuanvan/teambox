@@ -13,8 +13,9 @@
       = task_link(project,task_list)
       = task_form(project,task_list,task_list.new_task(current_user))
       - if task_list.tasks.unarchived.empty? && task_list.tasks.archived.size > 0
-        = "or"
-        = link_to "archive this task list", ""
+        %span{ :id => task_list_id(:archive_link,project,task_list) }
+          = "or"
+          = link_to "archive this task list", ""
   %table.task_list_closed
     %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
       = list_tasks(project,task_list,task_list.tasks.archived)      

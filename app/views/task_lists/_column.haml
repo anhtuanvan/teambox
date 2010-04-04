@@ -19,7 +19,7 @@
     = my_tasks(current_user.assigned_tasks(:all))
   - when 'show_task_lists', 'show_tasks'
     %h2= @task_list
-    = sidebar_tasks(@task_list.tasks)
+    = sidebar_tasks(@task_list.tasks.unarchived)
 
 %h2 Other views
 = subscribe_to_calendar_link(project)
