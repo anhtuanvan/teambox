@@ -1,4 +1,5 @@
-- tasks = assign_tasks(project,task_list)
+- open_tasks = task_list.tasks.reject { |t| t.closed? }
+- closed_tasks = task_list.tasks.select { |t| t.closed? }
 .task_list_container
   %table.task_list{ :id => task_list_id(:with_main_tasks,project,task_list) }
     %thead
@@ -8,9 +9,12 @@
           = drag_image
           = the_task_list_link(task_list)
     %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
-      = list_tasks(project,task_list,tasks,sub_action)
-
-  - if task_list_editable?(task_list,current_user,sub_action) # new task
+      = list_tasks(project,task_list,open_tasks)
+  - if task_list_editable?(task_list,current_user)
     .new_task
       = task_link(project,task_list)
       = task_form(project,task_list,task_list.new_task(current_user))
+  %table.task_list_closed
+    %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
+      = list_tasks(project,task_list,closed_tasks)
+      

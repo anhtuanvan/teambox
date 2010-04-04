@@ -250,20 +250,19 @@ module TasksHelper
   end
 
   def due_on(task)
-    if task.overdue?
-      t('tasks.overdue', :days => task.overdue) + " (#{I18n.l(task.due_on, :format => '%b %d')})"
+    if task.overdue? && task.overdue <= 5
+      t('tasks.overdue', :days => task.overdue)
     else
       I18n.l(task.due_on, :format => '%b %d')
     end
   end
 
-  def list_tasks(project,task_list,tasks,current_target=nil)
+  def list_tasks(project,task_list,tasks)
     render :partial => 'tasks/task',
       :collection => tasks,
       :locals => {
         :project => project,
-        :task_list => task_list,
-        :current_target => current_target }
+        :task_list => task_list }
   end
 
   def task_fields(f,project,task_list,task)
@@ -356,6 +355,10 @@ module TasksHelper
         :handle => 'img.drag',
         :constraint => 'vertical' })
     end
+  end
+
+  def task_overview_box(task)
+    render :partial => 'tasks/overview_box', :locals => { :task => task }
   end
 
   def date_picker(f, field)

@@ -5,23 +5,9 @@
 
 - case location_name
   - when 'show_tasks'
-    %h2= "This task"
-    %p
-      %strong= "Status:"
-      = task_status(@task,:column)
-    - if @task.due_on
-      %p
-        %strong= "Due on:"
-        = render_due_on(@task,current_user)
-    %p= render_assignment(@task,current_user)
+    = task_overview_box(@task)
   - when 'show_task_lists'
-    %h2= "This task list"
-    %p
-      %strong= "Starts on:"
-      = @task_list.start_on || "Undefined"
-    %p
-      %strong= "Ends on:"
-      = @task_list.finish_on || "Undefined"
+    = task_list_overview_box(@task_list)
 
 = banner(@events,@chart)
 
@@ -36,6 +22,5 @@
     = sidebar_tasks(@task_list.tasks)
 
 %h2 Other views
-
 = subscribe_to_calendar_link(project)
 = print_task_lists_link(project)

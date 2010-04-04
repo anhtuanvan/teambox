@@ -46,23 +46,23 @@ module TaskListsHelper
       :task_list => task_list }
   end
 
-  def task_list_editable?(task_list,user,sub_action)
-    sub_action != 'archived' && task_list.editable?(user)
+  def task_list_editable?(task_list,user)
+    task_list.editable?(user)
   end
 
-  def assign_tasks(project,task_list,sub_action = 'all_with_archived')
-    if sub_action == 'mine'
-      person = project.people.find_by_user_id(current_user.id)
-      task_list.tasks.unarchived.find(:all, :conditions => { :assigned_id => person.id} )
-    elsif sub_action == 'archived'
-      task_list.tasks.archived
-    elsif sub_action == 'all'
-      task_list.tasks.unarchived
-    elsif sub_action == 'all_with_archived'
-      task_list.tasks
-    end
-  end
-
+  # def assign_tasks(project,task_list,sub_action = 'all_with_archived')
+  #   if sub_action == 'mine'
+  #     person = project.people.find_by_user_id(current_user.id)
+  #     task_list.tasks.unarchived.find(:all, :conditions => { :assigned_id => person.id} )
+  #   elsif sub_action == 'archived'
+  #     task_list.tasks.archived
+  #   elsif sub_action == 'all'
+  #     task_list.tasks.unarchived
+  #   elsif sub_action == 'all_with_archived'
+  #     task_list.tasks
+  #   end
+  # end
+  # 
   def archived_task_lists(project,task_lists)
     render :partial => 'task_lists/archived_task_list_with_tasks',
       :as => :task_list,
@@ -170,15 +170,6 @@ module TaskListsHelper
       :task_list => task_list }
   end
 
-  def replace_task_list(project,task_list)
-    page.replace task_list_id(:item,project,task_list),
-      :partial => 'task_lists/task_list',
-      :locals => {
-        :project => project,
-        :task_list => task_list,
-        :current_target => task_list }
-  end
-
   def replace_task_list_header(project,task_list)
     page.replace task_list_id(:edit_header,project,task_list),
       :partial => 'task_lists/header',
@@ -224,12 +215,8 @@ module TaskListsHelper
     render :partial => 'task_lists/tasks_for_all_projects', :locals => { :tasks => tasks }
   end
 
-  # def maybe_cache_task_list_panel(task_list, current_target, &block)
-  #   if current_target.nil? or (current_target.respond_to?(:task_list) and current_target.task_list != task_list)
-  #     cache(task_list.cache_key_for_sidebar_panel, &block)
-  #   else
-  #     block.call
-  #   end
-  # end
+  def task_list_overview_box(task_list)
+    render :partial => 'task_lists/overview_box', :locals => { :task_list => task_list }
+  end
 
 end
