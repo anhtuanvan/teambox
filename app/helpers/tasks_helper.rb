@@ -5,6 +5,19 @@ module TasksHelper
     js_id(element,project,task_list,task)
   end
 
+  def task_classes(task)
+    classes = []
+    classes << 'due_today' if task.due_today?
+    classes << 'due_tomorrow' if task.due_tomorrow?
+    classes << 'overdue' if task.overdue?
+    classes << 'unassigned_date' if task.due_on.nil?
+    classes << (task.assigned.nil? ? 'unassigned' : "user_#{task.assigned.user_id}")
+    if task.open?
+      classes << 'mine' if task.assigned_to?(current_user)
+    end
+    classes.join(' ')
+  end
+
   def task_link(project,task_list,task=nil)
     task ||= project.tasks.build
     app_link(project,task_list,task)
@@ -237,12 +250,9 @@ module TasksHelper
     end
   end
 
-  def list_tasks(project,task_list,tasks)
+  def list_tasks(tasks)
     render :partial => 'tasks/task',
-      :collection => tasks,
-      :locals => {
-        :project => project,
-        :task_list => task_list }
+      :collection => tasks
   end
 
   def task_fields(f,project,task_list,task)

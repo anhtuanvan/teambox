@@ -68,12 +68,13 @@ table.task_list, table.task_list_closed
         :background rgb(245,245,245)
         :border solid 1px rgb(225,225,225)
         :text-transform uppercase
+        :display inline-block
         a
           :color rgb(100,100,100)
         a:hover
           :text-decoration none
           :color rgb(0,0,0)
-      span.status
+      span.status, span.project, span.task_list
         :display none
     tr.overdue
       td
@@ -108,6 +109,14 @@ table.task_list, table.task_list_closed
       td.name
         span
           :color rgb(200,0,0)
+
+#tasks_for_all_projects
+  .task_list
+    .task
+      span.project, span.task_list
+        :border none
+        :background none
+        :display inline
 
 table.task_list_closed
   :margin-top 10px

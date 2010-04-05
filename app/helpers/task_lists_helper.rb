@@ -1,5 +1,33 @@
 module TaskListsHelper
 
+  def filter_task_lists(project=nil)
+    render :partial => 'task_lists/filter', :locals => { :project => project }
+  end
+  
+  def filter_assigned_dropdown(project=nil)
+    options = ['Anybody',     'all'],
+              ['My tasks',    'mine'],
+              ['Unassigned',  'unassigned']
+    if !project.nil?
+      options += [['--------', 'divider']]
+      options += project.users.
+                  reject { |u| u == current_user }.
+                  collect { |u| [u.name, "user_#{u.id}"] }
+    end
+    select(:filter, :assigned, options, :disabled => 'divider')
+  end
+  
+  def filter_due_date_dropdown(project=nil)
+    options = ['Anytime',           'all'],
+              ['Late tasks',        'overdue'],
+              ['No date assigned',  'unassigned_date'],
+              ['--------',          'divider'],
+              ['Today',             'due_today'],
+              ['Tomorrow',          'due_tomorrow']
+    
+    select(:filter, :due_date, options, :disabled => 'divider')
+  end
+
   def task_list_range(task_list)
     start_on  = task_list.try(:start_on)
     finish_on = task_list.try(:finish_on)
