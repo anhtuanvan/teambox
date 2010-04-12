@@ -1,7 +1,23 @@
+.calendar_gantt
+  :margin 10px 0
+  a
+    :color #555
+  a:hover
+    :text-decoration none
+
 .banner_item
   .primer
-    :font-size 16px
+    :font-size 12px
     :text-align center
     :padding 10px 0px
       :top 15px
     :color rgb(160,160,160)
+
+#show_calendar_link, #show_gantt_chart_link
+  :border 1px solid #C8C8C8
+  :text-transform none
+  :padding 2px 5px 0 5px
+  +rounded-top(5px)
+
+#show_calendar_link.active, #show_gantt_chart_link.active
+  :border-bottom 1px solid white
