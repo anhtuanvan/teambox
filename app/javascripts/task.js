@@ -124,38 +124,40 @@ Element.addMethods({
   },
 })
 
+document.on('mouseover', '.task', function(e, element) {
+  element.down('img.drag').show();
+  element.down('span.task_status').hide();
+});
 
-Event.addBehavior({
-  ".task:mouseover": function(e){
-    $(this).down('img.drag').show();
-    $(this).down('span.task_status').hide();
-  },
-  ".task:mouseout": function(e){
-    $$(".task img.drag").each(function(e){ e.hide(); });
-    $$(".task span.task_status").each(function(e){ e.show(); });
-  },
-  ".inline_form_create:click": function(e) {
-    var form = e.findElement("form");
-    var submit_url = form.readAttribute("action");
-    Task.create(form, submit_url);
-    e.stop();
-  },
-  ".inline_form_update:click": function(e) {
-    var form = e.findElement("form");
-    var submit_url = form.readAttribute("action");
-    Task.update(form, submit_url);
-    e.stop();
-  },
-  ".inline_form_create_cancel:click": function(e){
-    var form = e.findElement("form");
-    form.up().down(".new_task_link").show();
-    form.hide();
-  },
-  ".inline_form_update_cancel:click": function(e){
-    var form = e.findElement("form");
-    form.up().down(".task_header").show();
-    form.hide();
-  }
+document.on('mouseout', '.task', 	function(e) {
+  $$(".task img.drag").each(function(e){ e.hide(); });
+  $$(".task span.task_status").each(function(e){ e.show(); });
+});
+
+document.on('click', '.inline_form_create', function(e) {
+  var form = e.findElement("form");
+  var submit_url = form.readAttribute("action");
+  Task.create(form, submit_url);
+  e.stop();
+});
+
+document.on('click', '.inline_form_update', function(e) {
+  var form = e.findElement("form");
+  var submit_url = form.readAttribute("action");
+  Task.update(form, submit_url);
+  e.stop();
+});
+
+document.on('click', 'a.inline_form_create_cancel', function(e) {
+  var form = e.findElement("form");
+  form.up().down(".new_task_link").show();
+  form.hide();
+});
+
+document.on('click', 'a.inline_form_update_cancel', function(e) {
+  var form = e.findElement("form");
+  form.up().down(".task_header").show();
+  form.hide();
 });
 
 Event.addBehavior.reassignAfterAjax = true;
