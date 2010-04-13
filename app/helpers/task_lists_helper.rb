@@ -28,15 +28,6 @@ module TaskListsHelper
     select(:filter, :due_date, options, :disabled => 'divider')
   end
 
-  def task_list_range(task_list)
-    start_on  = task_list.try(:start_on)
-    finish_on = task_list.try(:finish_on)
-
-    return nil unless start_on == finish_on
-    out = [I18n.l(start_on, :format => '%b %d'),I18n.l(finish_on, :format => '%b %d')].join(" - ")
-    content_tag(:span,out,:class => 'range')
-  end
-
   def task_list_id(element,project,task_list=nil)
     task_list ||= project.task_lists.new
     js_id(element,project,task_list)
@@ -58,7 +49,9 @@ module TaskListsHelper
   def task_list_form_loading(action,project,task_list)
     app_form_loading(action,project,task_list)
   end
-
+  
+  # Jenny helpers
+  
   def hide_task_list(project,task_list)
     app_toggle(project,task_list)
   end
@@ -66,6 +59,8 @@ module TaskListsHelper
   def show_task_list(project,task_list)
     app_toggle(project,task_list)
   end
+  
+  #
 
   def task_list_fields(f,project,task_list)
     render :partial => 'task_lists/fields', :locals => {
@@ -116,14 +111,6 @@ module TaskListsHelper
         :sub_action => sub_action }
   end
 
-  def reorder_task_lists(project,task_lists)
-    update_page do |page|
-      page << "$$('.tasks').each(function(task){ task.hide(); })"
-      page << "$$('.new_task_link').each(function(task){ task.hide(); })"
-      page << "$$('.task_list_wrap').each(function(task_list){ task_list.addClassName('task_list_wrap_reorder');})"
-    end
-  end
-
   def render_task_lists(project,task_lists,sub_action)
     render :partial => 'task_lists/task_list',
       :collection => task_lists,
@@ -161,30 +148,6 @@ module TaskListsHelper
       :task_list => task_list }
   end
 
-  def task_list_partial_action_links(project, task_list)
-    if logged_in?
-      if task_list.owner?(current_user)
-        render :partial => 'task_lists/partial_actions',
-        :locals => {
-          :project => project,
-          :task_list => task_list }
-      end
-    end
-  end
-
-  def task_lists_sortable(project)
-    update_page_tag do |page|
-      page.sortable("sortable_task_lists",{
-        :tag => 'div',
-        :url => reorder_task_lists_path(project),
-        :only => 'task_list',
-        :format => page.literal('/task_list_(\d+)/'),
-        :handle => 'img.drag',
-        :constraint => 'vertical'
-      })
-    end
-  end
-
   def task_list_primer(project)
     return unless project.editable?(current_user)
     render :partial => 'task_lists/primer', :locals => { :project => project }
@@ -209,20 +172,6 @@ module TaskListsHelper
       project_task_list_path(project,task_list),
       :confirm => t('confirm.delete_task_list'),
       :method => :delete
-  end
-
-  def delete_task_list_loading(project,task_list)
-    edit_actions_id = task_list_id('edit_actions',project,task_list)
-    delete_loading_id = task_list_id('delete_loading',project,task_list)
-    update_page do |page|
-      page[edit_actions_id].hide
-      page[delete_loading_id].show
-    end
-  end
-
-  def show_destroy_task_list_message(task_list)
-    page.replace 'show_task_list', :partial => 'task_lists/destroy_message', :locals => {
-      :task_list => task_list }
   end
 
   def print_task_lists_link(project = nil)

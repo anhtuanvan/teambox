@@ -31,10 +31,8 @@ module TasksHelper
     unobtrusive_app_submit(project,task_list,task)
   end
 
-  def task_form_loading(action,project,task_list,task)
-    app_form_loading(action,project,task_list,task)
-  end
-
+  # Jenny helpers
+  
   def show_task(project,task_list,task)
     app_toggle(project,task_list,task)
   end
@@ -42,6 +40,8 @@ module TasksHelper
   def hide_task(project,task_list,task)
     app_toggle(project,task_list,task)
   end
+  
+  #
 
   def replace_task_column(project,task_lists,sub_action,task)
     page.replace_html 'column', task_list_column(project,task_lists,sub_action,task)
