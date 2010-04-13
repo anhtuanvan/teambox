@@ -37,6 +37,10 @@ module TaskListsHelper
     task_list ||= project.task_lists.new
     app_link(project,task_list)
   end
+  
+  def task_list_index_header(project,task_list)
+    render :partial => 'task_lists/header_index', :locals => {:project => project, :task_list => task_list}
+  end
 
   def task_list_form_for(project,task_list,&proc)
     app_form_for(project,task_list,&proc)
@@ -44,10 +48,6 @@ module TaskListsHelper
 
   def task_list_submit(project,task_list)
     app_submit(project,task_list)
-  end
-
-  def task_list_form_loading(action,project,task_list)
-    app_form_loading(action,project,task_list)
   end
   
   # Jenny helpers
@@ -138,7 +138,7 @@ module TaskListsHelper
   end
 
   def the_task_list_link(task_list)
-    link_to h(task_list.name), project_task_list_path(task_list.project,task_list)
+    link_to h(task_list.name), project_task_list_path(task_list.project,task_list), :id => task_list_id(:title, task_list.project, task_list)
   end
 
   def task_list_action_links(project,task_list)
@@ -165,6 +165,22 @@ module TaskListsHelper
       :locals => {
         :project => project,
         :task_list => task_list}
+  end
+  
+  def rename_task_list_link(project,task_list)
+    link_to "Rename task list", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'title')
+  end
+  
+  def set_date_task_list_link(project,task_list)
+    link_to "Set the start & end date", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'date')
+  end
+  
+  def task_list_date_edit(project,task_list)
+    render :partial => 'task_lists/date_edit_form', :locals => {:project => project, :task_list => task_list}
+  end
+  
+  def task_list_title_edit(project,task_list)
+    render :partial => 'task_lists/title_edit_form', :locals => {:project => project, :task_list => task_list}
   end
 
   def delete_task_list_link(project,task_list)

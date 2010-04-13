@@ -322,6 +322,12 @@ module ApplicationHelper
     end
   end
   
+  def safe_remove_element(*ids)
+    Array(ids).each do |id|
+      page << "if ($('#{id}')) $('#{id}').remove();"
+    end
+  end
+  
   def groups_enabled?
     APP_CONFIG['allow_groups'] || false
   end

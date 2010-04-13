@@ -2,24 +2,8 @@
   %table.task_list{ :id => task_list_id(:with_main_tasks,project,task_list) }
     %thead
       %tr
-        %th{:colspan => 4}
-          = drag_image
-          = the_task_list_link(task_list)
-          .actions_menu
-            = date_range_for_task_list(task_list)
-            - if task_list_editable?(task_list,current_user)
-              = image_tag('triangle.png', :class => 'triangle')
-              .extra
-                - # TODO: This isn't implemented
-                = link_to_function "Rename task list", "prompt('Rename this task list', '#{task_list.name}')"
-                - # TODO: This isn't implemented
-                = link_to "Set the starting date"
-                - # TODO: This isn't implemented
-                = link_to "Set the ending date"
-                - # TODO: This isn't implemented
-                = link_to "Resolve all tasks and archive"
-                - # TODO: Make this unobtrusive
-                = delete_task_list_link(project,task_list)
+        %th{:colspan => 4, :id => task_list_id(:header_index,project,task_list) }
+          = task_list_index_header(project,task_list)
     %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
       = list_tasks(task_list.tasks.unarchived)
   - if task_list_editable?(task_list,current_user)
