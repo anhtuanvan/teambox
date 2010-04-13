@@ -41,6 +41,19 @@ module JennyHelper
       :class => "#{action}_#{singular_name}_link",
       :id => js_id("#{action}_link",*args)
   end
+  
+  def unobtrusive_app_link(*args)
+    target, action = shes_just_a_memory(*args)
+    return unless target.editable?(current_user)
+
+    singular_name = target.class.to_s.underscore
+    plural_name = target.class.to_s.tableize
+
+    # TODO: check what uses show_*. Should be {action}_*
+    link_to content_tag(:span,t("#{plural_name}.link.#{action}")), '#',
+      {:class => "jennyaction #{action}_#{singular_name}_link",
+      :id => js_id("#{action}_link",*args)}.merge(send("show_#{singular_name}".to_sym,*args))
+  end
 
   def app_toggle(*args)
     target, action = shes_just_a_memory(*args)
@@ -63,6 +76,19 @@ module JennyHelper
       page.select("##{form_id} .error").each {|e|e.remove}
       page << "if($('#{form_id}').getStyle('display') == 'block' && $('#{form_id}').down('.focus')){$('#{form_id}').auto_focus()}"
     end
+  end
+  
+  def unobtrusive_app_toggle(*args)
+    target, action = shes_just_a_memory(*args)
+
+    header_id = js_id("#{action}_header",*args)
+    link_id   = js_id("#{action}_link",*args)
+    form_id   = js_id("#{action}_form",*args)
+
+    {:new_record => target.new_record? ? 1 : 0,
+     :header_id => header_id,
+     :link_id => link_id,
+     :form_id => form_id}
   end
 
   def app_submit(*args)

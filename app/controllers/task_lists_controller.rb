@@ -81,11 +81,13 @@ class TaskListsController < ApplicationController
           flash[:success] = t('deleted.task_list', :name => @task_list.to_s)
           redirect_to project_task_lists_path(@current_project)
         end
+        f.js {}
       end
     else
       respond_to do |f|
         flash[:error] = t('common.not_allowed')
         f.html { redirect_to project_task_lists_path(@current_project) }
+        f.js { render :text => 'alert("Not allowed!");'; }
       end
     end
   end

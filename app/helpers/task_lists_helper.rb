@@ -169,9 +169,10 @@ module TaskListsHelper
 
   def delete_task_list_link(project,task_list)
     link_to t('common.delete'),
-      project_task_list_path(project,task_list),
-      :confirm => t('confirm.delete_task_list'),
-      :method => :delete
+      '#',
+      :action_url => project_task_list_path(project,task_list),
+      :aconfirm => t('confirm.delete_task_list'),
+      :class => 'taskListDelete'
   end
 
   def print_task_lists_link(project = nil)

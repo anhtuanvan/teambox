@@ -20,7 +20,7 @@ module TasksHelper
 
   def task_link(project,task_list,task=nil)
     task ||= project.tasks.build
-    app_link(project,task_list,task)
+    unobtrusive_app_link(project,task_list,task)
   end
 
   def task_form_for(project,task_list,task,&proc)
@@ -34,11 +34,11 @@ module TasksHelper
   # Jenny helpers
   
   def show_task(project,task_list,task)
-    app_toggle(project,task_list,task)
+    unobtrusive_app_toggle(project,task_list,task)
   end
 
   def hide_task(project,task_list,task)
-    app_toggle(project,task_list,task)
+    unobtrusive_app_toggle(project,task_list,task)
   end
   
   #
@@ -209,11 +209,16 @@ module TasksHelper
   end
 
   def delete_task_link(project,task_list,task)
-    link_to_remote t('common.delete'),
-      :url => project_task_list_task_path(project,task_list,task),
-      :loading => delete_task_loading(project,task_list,task),
-      :confirm => t('confirm.delete_task'),
-      :method => :delete
+    #link_to_remote t('common.delete'),
+    #  :url => project_task_list_task_path(project,task_list,task),
+    #  :loading => delete_task_loading(project,task_list,task),
+    #  :confirm => t('confirm.delete_task'),
+    #  :method => :delete
+      
+    link_to t('common.delete'), '#',
+      :class => 'taskDelete',
+      :aconfirm => t('confirm.delete_task'),
+      :action_url => project_task_list_task_path(project,task_list,task) 
   end
 
   def delete_task_loading(project,task_list,task)

@@ -91,6 +91,23 @@ Task = {
     })
   },
 
+  destroy: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'delete',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        //element.up('.actions_menu').hide();
+      },
+      onSuccess: function(response){
+        // ...
+      },
+      onFailure: function(response){	
+        //element.up('.actions_menu').show();
+      }
+    });
+  },
+
   highlight_last_as_new: function(list_of_tasks) {
     var new_task = list_of_tasks.select('.task').last();
     list_of_tasks.select('.task').each(function(task){
@@ -158,6 +175,17 @@ document.on('click', 'a.inline_form_update_cancel', function(e) {
   var form = e.findElement("form");
   form.up().down(".task_header").show();
   form.hide();
+});
+
+document.on('click', 'a.taskDelete', function(e, el) {
+	if (confirm(el.readAttribute('aconfirm')))
+	  Task.destroy(el, el.readAttribute('action_url'));
+	e.stop();
+});
+
+document.on('click', 'a.new_task_link', function(e, el) {
+	Jenny.toggleElement(el);
+	e.stop();
 });
 
 Event.addBehavior.reassignAfterAjax = true;
