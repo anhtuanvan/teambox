@@ -170,12 +170,12 @@ document.on('click', 'a.inline_form_create_cancel', function(e) {
   form.up().down(".new_task_link").show();
   form.hide();
 });
-
+/*
 document.on('click', 'a.inline_form_update_cancel', function(e) {
   var form = e.findElement("form");
   form.up().down(".task_header").show();
   form.hide();
-});
+});*/
 
 document.on('click', 'a.taskDelete', function(e, el) {
 	if (confirm(el.readAttribute('aconfirm')))

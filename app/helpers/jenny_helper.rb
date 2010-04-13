@@ -130,12 +130,23 @@ module JennyHelper
     raise ArgumentError, "Missing block" unless block_given?
     target, action = shes_just_a_memory(*args)
 
+    header_id = js_id("#{action}_header",*args)
+    link_id   = js_id("#{action}_link",*args)
+    form_id   = js_id("#{action}_form",*args)
+    
     singular_name = target.class.to_s.underscore
     form_for(args,
       :html => {
         :id => js_id("#{action}_form",*args),
         :class => "#{singular_name}_form app_form",
-        :style => 'display: none'},
+        :jennybase => js_id("", *args),
+        :jennytype => "#{action}_#{singular_name}",
+        :style => 'display: none',
+        # params for jenny to cancel
+        :new_record => target.new_record? ? 1 : 0,
+        :header_id => header_id,
+        :link_id => link_id,
+        :form_id => form_id},
         &proc)
   end
 

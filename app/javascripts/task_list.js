@@ -5,13 +5,13 @@ var TaskList = {
       asynchronous: true,
       evalScripts: true,
       onLoading: function() {
-        //element.up('.actions_menu').hide();
+        TaskList.setLoading(element, true);
       },
       onSuccess: function(response){
         // ...
       },
-      onFailure: function(response){	
-        //element.up('.actions_menu').show();
+      onFailure: function(response){
+        TaskList.setLoading(element, false);
       }
     });
   },
@@ -22,15 +22,54 @@ var TaskList = {
       asynchronous: true,
       evalScripts: true,
       onLoading: function() {
-        //element.up('.actions_menu').hide();
+        TaskList.setLoading(element, true);
       },
       onSuccess: function(response){
-        // ...
+        TaskList.setActions(element, false);
+        TaskList.setLoading(element, false);
       },
       onFailure: function(response){	
-        //element.up('.actions_menu').show();
+        TaskList.setLoading(element, false);
       }
     });	
+  },
+
+  setActions: function(element, visible) {
+	var actions = element.up('.task_list_container').down('.actions_menu');
+	if (actions == null)
+		return;
+	if (visible)
+		actions.show();
+	else
+		actions.hide();
+  },
+
+  setTitle: function(element, visible) {
+	var title = $(element.readAttribute('jennybase') + 'title');
+	if (title == null)
+		return;
+	if (visible)
+		title.show();
+	else
+		title.hide();
+  },
+
+  setLoading: function(element, loading) {
+	var actions = element.up('.task_list_container').down('.actions_menu');
+	if (actions == null)
+		return;
+	if (loading)
+	{
+		actions.addClassName('loading');
+		actions.down('span.loading').show();
+		actions.down('span.actiondate').hide();
+	}
+	else
+	{
+		actions.removeClassName('loading');
+		actions.down('span.loading').hide();
+		actions.down('span.actiondate').show();	
+	}
   }
 };
 
@@ -40,13 +79,36 @@ document.on('click', '#reorder_task_lists_link, #done_reordering_task_lists_link
   $('done_reordering_task_lists_link').show();
 });
 
+document.observe('jenny:cancel:edit_task_list', function(evt) {
+	// Only do this on the index
+	console.log(evt.memo.form.up('.task_list_container'));
+	if (evt.memo.form.up('.task_list_container'))
+	{
+		TaskList.setTitle(evt.memo.form, true);
+		TaskList.setActions(evt.memo.form, true);
+	}
+	else
+	{
+		evt.memo.form.up().down(".task_header").show();
+	}
+	console.log('???');
+});
+
+// update action
 document.on('click', 'a.taskListUpdate', function(e, el) {
 	TaskList.updateForm(el, el.readAttribute('action_url'));
 	e.stop();
 });
 
+// delete action
 document.on('click', 'a.taskListDelete', function(e, el) {
 	if (confirm(el.readAttribute('aconfirm')))
 	  TaskList.destroy(el, el.readAttribute('action_url'));
 	e.stop();
 });
+
+document.on('click', 'a.edit_task_list_link', function(e, el) {
+	Jenny.toggleElement(el); // edit form on task list show
+	e.stop();
+});
+

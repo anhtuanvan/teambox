@@ -35,7 +35,7 @@ module TaskListsHelper
 
   def task_list_link(project,task_list=nil)
     task_list ||= project.task_lists.new
-    app_link(project,task_list)
+    unobtrusive_app_link(project,task_list)
   end
   
   def task_list_index_header(project,task_list)
@@ -43,21 +43,21 @@ module TaskListsHelper
   end
 
   def task_list_form_for(project,task_list,&proc)
-    app_form_for(project,task_list,&proc)
+    unobtrusive_app_form_for(project,task_list,&proc)
   end
 
   def task_list_submit(project,task_list)
-    app_submit(project,task_list)
+    unobtrusive_app_submit(project,task_list)
   end
   
   # Jenny helpers
   
   def hide_task_list(project,task_list)
-    app_toggle(project,task_list)
+    unobtrusive_app_toggle(project,task_list)
   end
 
   def show_task_list(project,task_list)
-    app_toggle(project,task_list)
+    unobtrusive_app_toggle(project,task_list)
   end
   
   #
