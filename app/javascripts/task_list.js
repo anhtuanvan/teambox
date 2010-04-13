@@ -81,7 +81,6 @@ document.on('click', '#reorder_task_lists_link, #done_reordering_task_lists_link
 
 document.observe('jenny:cancel:edit_task_list', function(evt) {
 	// Only do this on the index
-	console.log(evt.memo.form.up('.task_list_container'));
 	if (evt.memo.form.up('.task_list_container'))
 	{
 		TaskList.setTitle(evt.memo.form, true);
@@ -91,7 +90,6 @@ document.observe('jenny:cancel:edit_task_list', function(evt) {
 	{
 		evt.memo.form.up().down(".task_header").show();
 	}
-	console.log('???');
 });
 
 // update action
@@ -104,6 +102,11 @@ document.on('click', 'a.taskListUpdate', function(e, el) {
 document.on('click', 'a.taskListDelete', function(e, el) {
 	if (confirm(el.readAttribute('aconfirm')))
 	  TaskList.destroy(el, el.readAttribute('action_url'));
+	e.stop();
+});
+
+document.on('click', 'a.create_first_task_list_link', function(e, el) {
+	Jenny.toggleElement(el); // edit form on task list show
 	e.stop();
 });
 

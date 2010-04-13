@@ -102,6 +102,16 @@ document.on('submit', 'form.appform', function(e, el) {
 	e.stop();
 });
 
+document.on('click', 'a.new_task_list_link', function(e, el) {
+	Jenny.toggleElement(el);
+	e.stop();
+});
+
+document.on('click', 'a.inline_form_create_cancel', function(e, el) {
+	Jenny.handleCancelForm(el.up('form')); // hide form
+	e.stop();
+});
+
 document.on('click', 'a.inline_form_update_cancel', function(e, el) {
 	Jenny.handleCancelForm(el.up('form')); // hide form
 	e.stop();

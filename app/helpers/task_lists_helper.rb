@@ -60,6 +60,11 @@ module TaskListsHelper
     unobtrusive_app_toggle(project,task_list)
   end
   
+  def show_new_task_list(project,task_list=nil)
+    task_list ||= project.task_lists.new
+    unobtrusive_app_toggle(project,task_list)
+  end
+  
   #
 
   def task_list_fields(f,project,task_list)
