@@ -208,7 +208,7 @@ module TasksHelper
     out
   end
 
-  def delete_task_link(project,task_list,task)
+  def delete_task_link(project,task_list,task,on_task=false)
     #link_to_remote t('common.delete'),
     #  :url => project_task_list_task_path(project,task_list,task),
     #  :loading => delete_task_loading(project,task_list,task),
@@ -218,7 +218,7 @@ module TasksHelper
     link_to t('common.delete'), '#',
       :class => 'taskDelete',
       :aconfirm => t('confirm.delete_task'),
-      :action_url => project_task_list_task_path(project,task_list,task) 
+      :action_url => project_task_list_task_path(project,task_list,task, :on_task => (on_task ? 1 : 0)) 
   end
 
   def delete_task_loading(project,task_list,task)

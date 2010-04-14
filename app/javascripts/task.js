@@ -165,13 +165,6 @@ document.on('click', '.inline_form_update', function(e) {
   e.stop();
 });
 
-/*
-document.on('click', 'a.inline_form_update_cancel', function(e) {
-  var form = e.findElement("form");
-  form.up().down(".task_header").show();
-  form.hide();
-});*/
-
 document.on('click', 'a.taskDelete', function(e, el) {
 	if (confirm(el.readAttribute('aconfirm')))
 	  Task.destroy(el, el.readAttribute('action_url'));
@@ -181,6 +174,15 @@ document.on('click', 'a.taskDelete', function(e, el) {
 document.on('click', 'a.new_task_link', function(e, el) {
 	Jenny.toggleElement(el);
 	e.stop();
+});
+
+document.on('click', 'a.edit_task_link', function(e, el) {
+	Jenny.toggleElement(el);
+	e.stop();
+});
+
+document.observe('jenny:cancel:edit_task', function(evt) {
+	$('show_task').down(".task_header").show();
 });
 
 Event.addBehavior.reassignAfterAjax = true;

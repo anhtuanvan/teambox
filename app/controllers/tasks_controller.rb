@@ -51,6 +51,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
+    @on_task = ((params[:on_task] || 0).to_i == 1)
     if @task.editable?(current_user)
       @task.try(:destroy)
 

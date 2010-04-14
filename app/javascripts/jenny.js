@@ -29,15 +29,19 @@ var Jenny = {
 		    else
 		      Effect.BlindUp(form_id, { duration: .3 });
 		} else {
+			var formVisible = form.visible();
 			
-	        if (!form.visible())
+	        if (!formVisible) {
 		    	Effect.BlindDown(form_id, { duration: .3 });
-			else	
+				formVisible = true;
+			} else {
 		    	Effect.BlindUp(form_id, { duration: .3 });
+				formVisible = false;
+			}
 			
 			if (header)
 			{
-	        	if (!form.visible())
+	        	if (!formVisible)
 			    	Effect.BlindDown(header_id, { duration: .3 });
 				else
 		    		Effect.BlindUp(header_id, { duration: .3 });
