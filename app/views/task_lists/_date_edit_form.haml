@@ -1,5 +1,5 @@
 - task_list_form_for(project,task_list) do |f|
-  = hidden_field_tag "on_index", "1"
+  = hidden_field_tag("on_index", "1") if @on_index
   .pick_date
     = f.label :start_on, t('task_lists.fields.start_on')
     = date_picker(f, :start_on)

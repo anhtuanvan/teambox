@@ -1,5 +1,5 @@
 - task_list_form_for(project,task_list) do |f|
-  = hidden_field_tag "on_index", "1"
+  = hidden_field_tag("on_index", "1") if @on_index
   .name.text_field
     = f.label :name, t('task_lists.fields.name')
     = f.text_field :name, :class => 'focus', :autofocus => 'true'

@@ -57,6 +57,7 @@ class TaskListsController < ApplicationController
   
   def edit
     @edit_part = params[:part]
+    @on_index = ((params[:on_index] || 0).to_i == 1)
     
     respond_to do |f|
       f.js
@@ -67,11 +68,7 @@ class TaskListsController < ApplicationController
     @task_list.update_attributes(params[:task_list])
     respond_to do |f|
       f.js {
-        if params[:on_index]
-          render :update_index
-        else
-          render :update
-        end
+        render :update_index
       }
     end
   end
@@ -89,6 +86,7 @@ class TaskListsController < ApplicationController
   end
 
   def destroy
+    @on_index = ((params[:on_index] || 0).to_i == 1)
     if @task_list.editable?(current_user)
       @task_list.try(:destroy)
 

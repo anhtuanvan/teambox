@@ -188,12 +188,16 @@ module TaskListsHelper
     render :partial => 'task_lists/title_edit_form', :locals => {:project => project, :task_list => task_list}
   end
 
-  def delete_task_list_link(project,task_list)
+  def delete_task_list_link(project,task_list, on_index=false)
     link_to t('common.delete'),
       '#',
-      :action_url => project_task_list_path(project,task_list),
+      :action_url => project_task_list_path(project,task_list, :on_index => (on_index ? 1 : 0)),
       :aconfirm => t('confirm.delete_task_list'),
       :class => 'taskListDelete'
+  end
+  
+  def resolve_archive_task_list_link(project,task_list, on_index=false)
+    link_to "Resolve all tasks and archive", '#', :class => 'taskListResolve', :action_url => edit_project_task_list_path(project, task_list, :part => 'title')
   end
 
   def print_task_lists_link(project = nil)
