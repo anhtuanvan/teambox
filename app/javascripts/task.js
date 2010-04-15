@@ -166,23 +166,23 @@ document.on('click', '.inline_form_update', function(e) {
 });
 
 document.on('click', 'a.taskDelete', function(e, el) {
-	if (confirm(el.readAttribute('aconfirm')))
-	  Task.destroy(el, el.readAttribute('action_url'));
-	e.stop();
+  if (confirm(el.readAttribute('aconfirm')))
+    Task.destroy(el, el.readAttribute('action_url'));
+  e.stop();
 });
 
 document.on('click', 'a.new_task_link', function(e, el) {
-	Jenny.toggleElement(el);
-	e.stop();
+  Jenny.toggleElement(el);
+  e.stop();
 });
 
 document.on('click', 'a.edit_task_link', function(e, el) {
-	Jenny.toggleElement(el);
-	e.stop();
+  Jenny.toggleElement(el);
+  e.stop();
 });
 
 document.observe('jenny:cancel:edit_task', function(evt) {
-	$('show_task').down(".task_header").show();
+  $('show_task').down(".task_header").show();
 });
 
 Event.addBehavior.reassignAfterAjax = true;
