@@ -1,5 +1,5 @@
 if !@on_index
   page.redirect_to project_task_lists_path(@current_project)
 else
-  page[task_list_id(:container,@current_project,@task_list)].remove
+  page[task_list_id(nil,@current_project,@task_list)].remove
 end

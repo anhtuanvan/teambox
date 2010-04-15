@@ -40,6 +40,7 @@ Task = {
       },
       onSuccess: function(response){
         form.down('.loading').hide();
+        console.log("YAARRRGH");
         // make the form disappear
         form.hide();
         var new_task_link = form.up().down(".new_task_link");
@@ -149,13 +150,6 @@ document.on('mouseover', '.task', function(e, element) {
 document.on('mouseout', '.task', 	function(e) {
   $$(".task img.drag").each(function(e){ e.hide(); });
   $$(".task span.task_status").each(function(e){ e.show(); });
-});
-
-document.on('click', '.inline_form_create', function(e) {
-  var form = e.findElement("form");
-  var submit_url = form.readAttribute("action");
-  Task.create(form, submit_url);
-  e.stop();
 });
 
 document.on('click', '.inline_form_update', function(e) {

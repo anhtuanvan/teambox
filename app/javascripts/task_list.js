@@ -1,4 +1,27 @@
 var TaskList = {
+  in_sort: false,
+
+  makeSortable: function() {
+	TaskList.in_sort = true;
+    Sortable.create('task_lists', {
+      constraint:'vertical',
+      handle:'img.drag',
+      tag:'div',
+      only:'task_list_container',
+      onUpdate: function(){
+        new Ajax.Request($('task_lists').readAttribute("reorder_url"), {
+          asynchronous: true,
+          evalScripts: true,
+          parameters: Sortable.serialize('task_lists')
+        });
+      }
+    });
+  },
+  destroySortable: function() {
+	TaskList.in_sort = false;
+	Sortable.destroy('task_lists');
+  },
+
   destroy: function(element, url) {
     new Ajax.Request(url, {
       method: 'delete',
@@ -85,12 +108,14 @@ var TaskList = {
       $('reorder_task_lists_link').hide();
       $('done_reordering_task_lists_link').show();
       Filter.showAllTaskLists();
+      TaskList.makeSortable();
     }
     else
     {
       $('reorder_task_lists_link').show();
       $('done_reordering_task_lists_link').hide();
       Filter.updateFilters();
+      TaskList.destroySortable();
     }
   }
 };
@@ -101,6 +126,26 @@ document.on('click', '#reorder_task_lists_link, #done_reordering_task_lists_link
 
 document.on('click', '#done_reordering_task_lists_link', function(e, element){
   TaskList.setReorder(false);
+});
+
+document.observe('jenny:loaded:edit_task_list', function(evt) {
+  // Reload sort
+  if (TaskList.in_sort) {
+	setTimeout(function(){
+      TaskList.setReorder(false);	
+      TaskList.setReorder(true);
+    }, 0);
+  }
+});
+
+document.observe('jenny:loaded:new_task_list', function(evt) {
+  // Reload sort
+  if (TaskList.in_sort) {
+	setTimeout(function(){
+      TaskList.setReorder(false);	
+      TaskList.setReorder(true);
+    }, 0);	
+  }
 });
 
 document.observe('jenny:cancel:edit_task_list', function(evt) {

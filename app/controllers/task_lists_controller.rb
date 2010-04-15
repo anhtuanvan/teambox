@@ -79,9 +79,13 @@ class TaskListsController < ApplicationController
   end
 
   def reorder
-    params[:sortable_task_lists].each_with_index do |task_list_id,idx|
+    params[:task_lists].each_with_index do |task_list_id,idx|
       task_list = @current_project.task_lists.find(task_list_id)
       task_list.update_attribute(:position,idx.to_i)
+    end
+    
+    respond_to do |f|
+      f.js{}
     end
   end
 

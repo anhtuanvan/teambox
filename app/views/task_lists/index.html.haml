@@ -12,7 +12,7 @@
   - if @current_project.editable?(current_user)
     = task_list_form(@current_project,TaskList.new)
 
-  #task_lists
+  #task_lists{:reorder_url => project_reorder_task_lists_path(@current_project)}
     = render_task_lists(@current_project,@task_lists,@sub_action)
 
   - if @task_lists.empty?

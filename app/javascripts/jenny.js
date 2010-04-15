@@ -101,7 +101,7 @@ var Jenny = {
 };
 
 // Generic jenny form
-document.on('submit', 'form.appform', function(e, el) {
+document.on('submit', 'form.jenny_form', function(e, el) {
 	Jenny.handleForm(el);
 	e.stop();
 });
@@ -111,11 +111,13 @@ document.on('click', 'a.new_task_list_link', function(e, el) {
 	e.stop();
 });
 
+// Jenny cancel on create
 document.on('click', 'a.inline_form_create_cancel', function(e, el) {
 	Jenny.handleCancelForm(el.up('form')); // hide form
 	e.stop();
 });
 
+// Jenny cancel on update
 document.on('click', 'a.inline_form_update_cancel', function(e, el) {
 	Jenny.handleCancelForm(el.up('form')); // hide form
 	e.stop();
