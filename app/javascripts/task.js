@@ -21,7 +21,7 @@ Task = {
   },
 
   make_all_sortable: function() {
-    var task_div_ids = $$(".tasks").map(function(task_div){
+    var task_div_ids = $$(".tasks.open").map(function(task_div){
       return task_div.identify();
     })
     task_div_ids.each(function(task_div_id){
