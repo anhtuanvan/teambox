@@ -570,6 +570,8 @@ fr:
       new: Nouvelle liste de tâches
       edit: Editer
       reorder: Réordonner
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Nouvelle liste de tâches
       empty: Aucune tâche dans cette catégorie!

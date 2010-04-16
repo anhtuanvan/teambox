@@ -588,6 +588,8 @@ ca:
       new: Nova llista de tasques
       edit: Editar
       reorder: Reordenar
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Nova llista de tasques
       empty: No hi ha tasques en aquesta categoria

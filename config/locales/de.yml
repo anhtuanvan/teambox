@@ -590,6 +590,8 @@ de:
       new: Neue Aufgabenliste
       edit: Bearbeiten
       reorder: Neu anordnen
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Neue Aufgabenliste
       empty: Keine Aufgaben in dieser Kategorie!

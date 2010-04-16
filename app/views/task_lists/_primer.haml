@@ -1,4 +1,4 @@
-#primer
+#primer{:style => (primer_hidden ? 'display:none' : nil)}
   %p= t('.empty')
   .box
     - if project.editable?(current_user)

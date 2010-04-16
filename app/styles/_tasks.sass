@@ -103,7 +103,7 @@ div.column
   img.drag
     display: inline-block
     margin-right: 20px
-  tbody, .new_task
+  div.tasks, .new_task
     display: none
 
 .task_list, .task_list_closed
@@ -127,7 +127,8 @@ div.column
     a
       font-weight: bold
   .task
-    img.drag
+    img.task_drag
+      display: none
       margin-left: -18px
     .inner
       :padding	

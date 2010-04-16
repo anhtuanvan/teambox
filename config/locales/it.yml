@@ -588,6 +588,8 @@ it:
       new: Nuova lista di compiti
       edit: Edita
       reorder: Riordina
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Nuova lista di compiti
       empty: Non ci sono compiti in questa categoria

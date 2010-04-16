@@ -570,6 +570,8 @@ ja:
       new: 新規タスクリスト
       edit: 編集
       reorder: Reorder
+      ####
+      reorder_done: Done reorder
     index:
       add_link: 新規タスクリスト
       empty: No tasks in this category!

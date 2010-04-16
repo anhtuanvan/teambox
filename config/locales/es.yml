@@ -568,6 +568,8 @@ es:
       new: Nueva lista de tareas
       edit: Editar
       reorder: Reordenar
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Nueva lista de tareas
       empty: No hay tareas en esta categoría

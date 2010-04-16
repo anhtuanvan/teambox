@@ -569,6 +569,8 @@ ru:
       new: Новый список задач
       edit: Редактировать
       reorder: Сортировать
+      ####
+      reorder_done: Done reorder
     index:
       add_link: Новый список задач
       empty: Нет задач в этой категории!

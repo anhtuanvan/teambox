@@ -5,13 +5,12 @@ Task = {
       constraint:'vertical',
       containment: all_task_ids,
       format: /.*task_(\d+)_task_task/,
-      handle:'img.drag',
+      handle:'img.task_drag',
       dropOnEmpty: true,
       // that makes the task disappear when it leaves its original task list
       // only:'task',
       tag:'div',
       onUpdate: function(){
-	    console.log("UPDATING");
         new Ajax.Request($(task_id).readAttribute("reorder_url"), {
           asynchronous: true,
           evalScripts: true,
@@ -143,13 +142,13 @@ Element.addMethods({
   },
 })
 
-document.on('mouseover', '.task', function(e, element) {
-  element.down('img.drag').setAttribute('style', 'display:block');
+document.on('mouseover', '.task_list .task', function(e, element) {
+  element.down('img.task_drag').setAttribute('style', 'display:block');
   //element.down('span.task_status').hide();
 });
 
-document.on('mouseout', '.task', 	function(e, element) {
-  $$(".task img.drag").each(function(e){ e.hide(); });
+document.on('mouseout', '.task_list .task', 	function(e, element) {
+  $$(".task img.task_drag").each(function(e){ e.hide(); });
   //$$(".task span.task_status").each(function(e){ e.show(); });
 });
 

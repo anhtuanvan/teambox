@@ -37,6 +37,7 @@ class TaskListsController < ApplicationController
   end
 
   def new
+    @on_index = true
     @task_list = @current_project.task_lists.new
     respond_to do |f|
       f.m
@@ -45,6 +46,7 @@ class TaskListsController < ApplicationController
   end
 
   def create
+    @on_index = true
     if @task_list = @current_project.create_task_list(current_user,params[:task_list])
       @sub_action = 'all'
     end
@@ -57,7 +59,7 @@ class TaskListsController < ApplicationController
   
   def edit
     @edit_part = params[:part]
-    @on_index = ((params[:on_index] || 0).to_i == 1)
+    calc_onindex
     
     respond_to do |f|
       f.js
@@ -65,6 +67,7 @@ class TaskListsController < ApplicationController
   end
 
   def update
+    calc_onindex
     @task_list.update_attributes(params[:task_list])
     respond_to do |f|
       f.js {
@@ -90,7 +93,7 @@ class TaskListsController < ApplicationController
   end
 
   def destroy
-    @on_index = ((params[:on_index] || 0).to_i == 1)
+    calc_onindex
     if @task_list.editable?(current_user)
       @task_list.try(:destroy)
 
@@ -146,6 +149,10 @@ class TaskListsController < ApplicationController
 
     def load_task_list
       @task_list = @current_project.task_lists.find(params[:id])
+    end
+    
+    def calc_onindex
+      @on_index = ((params[:on_index] || 0).to_i == 1)
     end
 
 end

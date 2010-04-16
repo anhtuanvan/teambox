@@ -32,6 +32,7 @@ var TaskList = {
       },
       onSuccess: function(response){
         // ...
+        setTimeout(function(){TaskList.updatePrimer();}, 0);
       },
       onFailure: function(response){
         TaskList.setLoading(element, false);
@@ -117,10 +118,18 @@ var TaskList = {
       Filter.updateFilters();
       TaskList.destroySortable();
     }
+  },
+  
+  updatePrimer: function() {
+    var primer = $('primer');
+    if (primer && $$('.task_list').length == 0)
+      primer.show();
+    else if (primer)
+      primer.hide();
   }
 };
 
-document.on('click', '#reorder_task_lists_link, #done_reordering_task_lists_link', function(e, element){
+document.on('click', '#reorder_task_lists_link', function(e, element){
   TaskList.setReorder(true);
 });
 
@@ -144,8 +153,11 @@ document.observe('jenny:loaded:new_task_list', function(evt) {
 	setTimeout(function(){
       TaskList.setReorder(false);	
       TaskList.setReorder(true);
-    }, 0);	
+    }, 0);
   }
+  setTimeout(function(){
+    TaskList.updatePrimer();
+  }, 0);
 });
 
 document.observe('jenny:cancel:edit_task_list', function(evt) {

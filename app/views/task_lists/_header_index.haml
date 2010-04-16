@@ -1,5 +1,5 @@
 = drag_image
-- header_on_index = (action_name == 'index')
+- header_on_index = @on_index || (action_name == 'index')
 .actions_menu
   %span.actiondate= date_range_for_task_list(task_list)
   %span.loading{:style => 'display:none'}= "Loading..."
@@ -7,9 +7,9 @@
     = image_tag('triangle.png', :class => 'triangle')
     .extra
       - # TODO: This isn't implemented
-      = rename_task_list_link(project,task_list)
+      = rename_task_list_link(project,task_list, header_on_index)
       - # TODO: This isn't implemented
-      = set_date_task_list_link(project,task_list)
+      = set_date_task_list_link(project,task_list, header_on_index)
       - # TODO: This isn't implemented
       = resolve_archive_task_list_link(project,task_list, header_on_index)
       - # TODO: Make this unobtrusive

@@ -6,6 +6,8 @@
 //   jenny:failed:action_class
 //   jenny:loaded:action_class
 //   jenny:cancel:action_class
+//
+// TODO: need post-request callbacks
 
 var Jenny = {
 	toggleElement: function(el) {

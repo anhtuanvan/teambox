@@ -153,9 +153,9 @@ module TaskListsHelper
       :task_list => task_list }
   end
 
-  def task_list_primer(project)
+  def task_list_primer(project,hidden=false)
     return unless project.editable?(current_user)
-    render :partial => 'task_lists/primer', :locals => { :project => project }
+    render :partial => 'task_lists/primer', :locals => { :project => project, :primer_hidden => hidden }
   end
 
   def task_list_header(project,task_list)
@@ -172,12 +172,12 @@ module TaskListsHelper
         :task_list => task_list}
   end
   
-  def rename_task_list_link(project,task_list)
-    link_to "Rename task list", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'title')
+  def rename_task_list_link(project,task_list, on_index=false)
+    link_to "Rename task list", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'title', :on_index => (on_index ? 1 : 0))
   end
   
-  def set_date_task_list_link(project,task_list)
-    link_to "Set the start & end date", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'date')
+  def set_date_task_list_link(project,task_list, on_index=false)
+    link_to "Set the start & end date", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'date', :on_index => (on_index ? 1 : 0))
   end
   
   def task_list_date_edit(project,task_list)

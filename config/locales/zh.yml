@@ -572,6 +572,8 @@ zh:
       new: 创建任务列表
       edit: 编辑
       reorder: 重新排序
+      ####
+      reorder_done: Done reorder
     index:
       add_link: 创建任务列表
       empty: 此目录中没有任务！

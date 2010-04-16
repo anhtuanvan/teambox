@@ -575,7 +575,8 @@ en:
     link:
       new: New Task List
       edit: Edit
-      reorder: Reorder
+      reorder: Reorder Task Lists
+      reorder_done: Done reorder
     index:
       add_link: New Task List
       empty: No tasks in this category!

@@ -12,10 +12,6 @@ if @task_list.errors.empty?
   page[link_id].show
   page[form_id].hide
 
-  page.ef('primer')
-    page[:primer].remove
-  page.en
-
   page << "Form.reset('#{form_id}')"
 else
   page[form_id].addClassName('form_error')
