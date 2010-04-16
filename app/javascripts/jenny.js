@@ -71,6 +71,8 @@ var Jenny = {
 		var url = form.readAttribute('action');
 		var formClass = form.readAttribute('jennytype');
 		
+		//console.log('JENNY:CB:' + formClass);
+		
 	    new Ajax.Request(url, {
 	      asynchronous: true,
 	      evalScripts: true,

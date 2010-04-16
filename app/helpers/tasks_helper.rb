@@ -299,7 +299,7 @@ module TasksHelper
   end
 
   def insert_task(project,task_list,task)
-    page.insert_html :bottom, task_list_id(:with_main_tasks,project,task_list),
+    page.insert_html :bottom, task_list_id(:the_main_tasks,project,task_list),
       :partial => 'tasks/task',
       :locals => {
         :task => task,

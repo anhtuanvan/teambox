@@ -4,13 +4,14 @@ Task = {
     Sortable.create(task_id, {
       constraint:'vertical',
       containment: all_task_ids,
-      format: /.*task_(\d+)_item/,
+      format: /.*task_(\d+)_task_task/,
       handle:'img.drag',
       dropOnEmpty: true,
       // that makes the task disappear when it leaves its original task list
       // only:'task',
       tag:'div',
       onUpdate: function(){
+	    console.log("UPDATING");
         new Ajax.Request($(task_id).readAttribute("reorder_url"), {
           asynchronous: true,
           evalScripts: true,
@@ -143,13 +144,13 @@ Element.addMethods({
 })
 
 document.on('mouseover', '.task', function(e, element) {
-  element.down('img.drag').show();
-  element.down('span.task_status').hide();
+  element.down('img.drag').setAttribute('style', 'display:block');
+  //element.down('span.task_status').hide();
 });
 
-document.on('mouseout', '.task', 	function(e) {
+document.on('mouseout', '.task', 	function(e, element) {
   $$(".task img.drag").each(function(e){ e.hide(); });
-  $$(".task span.task_status").each(function(e){ e.show(); });
+  //$$(".task span.task_status").each(function(e){ e.show(); });
 });
 
 document.on('click', '.inline_form_update', function(e) {
@@ -175,8 +176,26 @@ document.on('click', 'a.edit_task_link', function(e, el) {
   e.stop();
 });
 
+document.observe('jenny:loaded:new_task', function(evt) {
+  setTimeout(function(){
+    Task.make_all_sortable();
+  }, 0);
+});
+
+document.observe('jenny:loaded:edit_task', function(evt) {
+  setTimeout(function(){
+    Task.make_all_sortable();
+  }, 0);
+});
+
 document.observe('jenny:cancel:edit_task', function(evt) {
   $('show_task').down(".task_header").show();
+});
+
+// Enable task sort on load
+document.observe('dom:loaded', function(e) {
+	if ($$('.tasks').length > 0)
+	  Task.make_all_sortable();
 });
 
 Event.addBehavior.reassignAfterAjax = true;

@@ -21,43 +21,47 @@
   tbody, .new_task
     :display none
 
-table.task_list, table.task_list_closed
+.task_list, .task_list_closed
   :width 100%
   a
     :color rgb(50,50,50)
   img.drag
     :display none
-  thead
-    th
-      :font-size 14px
-      :border-bottom solid 1px rgb(240,240,240)
-      :padding-bottom 5px
-      :color rgb(100,100,100)
-      .dates
-        :float right
-        :padding 0
-          :top 6px
-          :right 20px
-        :font-size 10px
-        :color rgb(150,150,150)
-      a
-        :font-weight bold
-  tbody
-    td
-      :padding 4px 5px
-    td.status
+  .head
+    :font-size 14px
+    :border-bottom solid 1px rgb(240,240,240)
+    :padding-bottom 5px
+    :color rgb(100,100,100)
+    .dates
+      :float right
+      :padding 0
+        :top 6px
+        :right 20px
+      :font-size 10px
+      :color rgb(150,150,150)
+    a
+      :font-weight bold
+  .task
+    img.drag
+      :margin-left -18px
+    .inner
+      :padding	
+        :top 4px
+        :bottom 4px
+    .taskStatus
       :text-align right
+      :float left
       :width 30px
       :padding
         :left 20px
-        :top 6px
       span
         :display block
         :width 23px
         :padding 0
         :text-align center
-    td.name
+    .taskName
       :font-size 12px
+      :padding-left 4px
       span.assigned
         :color rgb(100,100,100)
         :padding 1px 5px
@@ -76,39 +80,37 @@ table.task_list, table.task_list_closed
           :color rgb(0,0,0)
       span.status, span.project, span.task_list
         :display none
-    tr.overdue
-      td
-        :background rgb(255,240,240)
-      td.name
+  .task.overdue
+    :background rgb(255,240,240)
+    .taskName
+      a
+        :color rgb(200,0,0)
+        :font-weight bold
+      span
+        :background rgb(255,255,255)
+        :border solid 1px rgb(240,200,200)
+        :color rgb(200,0,0)
+        :font-weight bold
         a
           :color rgb(200,0,0)
-          :font-weight bold
-        span
-          :background rgb(255,255,255)
-          :border solid 1px rgb(240,200,200)
-          :color rgb(200,0,0)
-          :font-weight bold
-          a
-            :color rgb(200,0,0)
-            :font-weight normal
-    tr.mine
-      td
-        :background rgb(255,255,210)
-      td.name
+          :font-weight normal
+  .task.mine
+    :background rgb(255,255,210)
+    .taskName
+      a
+        :font-weight bold
+      span
+        :background rgb(255,255,255)
+        :border solid 1px rgb(200,200,240)
+        :color rgb(0,0,200)
+        :font-weight bold
         a
-          :font-weight bold
-        span
-          :background rgb(255,255,255)
-          :border solid 1px rgb(200,200,240)
-          :color rgb(0,0,200)
-          :font-weight bold
-          a
-            :color #555
-            :font-weight normal
-    tr.overdue.mine
-      td.name
-        span
-          :color rgb(200,0,0)
+          :color #555
+          :font-weight normal
+  .task.overdue.mine
+    .taskName
+      span
+        :color rgb(200,0,0)
 
 #tasks_for_all_projects
   .task_list
@@ -120,11 +122,11 @@ table.task_list, table.task_list_closed
 
 table.task_list_closed
   :margin-top 10px
-  tbody
-    td.status
+  .tasks
+    .taskStatus
       :padding-left 50px
       span
         :width 18px
         :font-size 10px
-    td.name
+    .taskName
       :font-size 10px

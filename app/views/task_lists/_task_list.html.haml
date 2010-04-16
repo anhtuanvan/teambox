@@ -1,10 +1,8 @@
 .task_list_container{ :id => task_list_id(nil,project,task_list) }
-  %table.task_list{ :id => task_list_id(:with_main_tasks,project,task_list) }
-    %thead
-      %tr
-        %th{:colspan => 4, :id => task_list_id(:header_index,project,task_list) }
-          = task_list_index_header(project,task_list)
-    %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
+  .task_list{ :id => task_list_id(:with_main_tasks,project,task_list) }
+    .head{:id => task_list_id(:header_index,project,task_list) }
+      = task_list_index_header(project,task_list)
+    %div{ :id => task_list_id(:the_main_tasks,project,task_list), :class => 'tasks', :reorder_url => project_reorder_tasks_path(project,task_list) }
       = list_tasks(task_list.tasks.unarchived)
   - if task_list_editable?(task_list,current_user)
     .new_task
@@ -15,5 +13,6 @@
           = "or"
           = link_to "archive this task list", ""
   %table.task_list_closed
-    %tbody{ :id => task_list_id(:the_main_tasks,project,task_list) }
-      = list_tasks(task_list.tasks.archived)      
+    %tbody
+      %tr{ :id => task_list_id(:the_main_tasks,project,task_list) }
+        = list_tasks(task_list.tasks.archived)      
