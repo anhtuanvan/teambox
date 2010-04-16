@@ -2,6 +2,8 @@
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en" }
   %head
     %meta{ 'http-equiv' => "content-type", :content => "text/html;charset=utf-8" }
+    - if current_user
+      %meta{ :name => 'current-username', :content => current_user.login }
     %link{ :rel => "shortcut icon", :href => "/images/favicon.ico" }
     %title
       = @page_title
@@ -18,7 +20,7 @@
     .container
       = header
       = global_navigation
-      = hot_flashes(flash)
+      - show_flash
       = navigation(@current_project,current_user.projects,current_user.recent_projects)
       .wrapper
         - unless location_name?(['welcome_users','new_projects','show_users','edit_users','new_avatars','index_invitations'])
@@ -28,7 +30,6 @@
             = yield :banner
         %div{ :class => @content_for_column.nil? ? 'content_wrap_single' : 'content_wrap' }
           .content#content
-            = render :partial => "shared/current_user"
             = yield
         - if @content_for_column
           .column_wrap
@@ -37,5 +38,4 @@
             = profile_completeness
           .clear
       = footer
-    = face_box
     = javascripts
