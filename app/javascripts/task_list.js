@@ -40,6 +40,24 @@ var TaskList = {
     });
   },
 
+  // Updates task list state
+  updateList: function(id) {
+    // ...
+    var list = $(id);
+    if (!list)
+      return;
+    
+    var open = $(id + '_the_main_tasks');
+    var archived = $(id + '_the_closed_tasks');
+    var open_count = open.childElements().length;
+    var archived_count = archived.childElements().length;
+    var link = $(id + '_archive_link');
+    if (open_count == 0 && archived_count > 0)
+      link.show();
+    else
+      link.hide();
+  },
+
   updateForm: function(element, url) { 
     new Ajax.Request(url, {
       method: 'get',

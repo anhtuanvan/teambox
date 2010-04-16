@@ -306,12 +306,16 @@ module TasksHelper
 
   def insert_task(project,task_list,task)
     page.insert_html :bottom, task_list_id(:the_main_tasks,project,task_list),
-      :partial => 'tasks/task',
-      :locals => {
-        :task => task,
-        :project => project,
-        :task_list => task_list,
-        :current_target => nil }
+      insert_task_options(project,task_list,task)
+  end
+  
+  def insert_task_options(project,task_list,task)
+    {:partial => 'tasks/task',
+    :locals => {
+      :task => task,
+      :project => project,
+      :task_list => task_list,
+      :current_target => nil }}
   end
 
   def replace_task(project,task_list,task)

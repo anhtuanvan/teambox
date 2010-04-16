@@ -92,6 +92,19 @@ Task = {
     })
   },
 
+  insertTask: function(task_list_id, archived, task_id, html) {
+    var container = archived ? $(task_list_id + '_the_closed_tasks') : $(task_list_id + '_the_main_tasks');
+    container.insert({bottom: html});
+    console.log("HL" + task_id);
+    new Effect.Highlight(task_id, { duration: 3 });
+    TaskList.updateList(task_list_id);
+  },
+
+  removeTask: function(task_list_id, task_id) {
+    $(task_id).remove();
+    TaskList.updateList(task_list_id);
+  },
+
   destroy: function(element, url) {
     new Ajax.Request(url, {
       method: 'delete',
