@@ -76,6 +76,23 @@ var TaskList = {
     });	
   },
 
+  updatePage: function(part) {
+    var el = $('task_lists');
+    if (!el)
+      el = $('show_task_list');
+    if (!el)
+      el = $('show_task');
+    if (!el)
+      return;
+    var url = el.readAttribute('reload_url');
+    url = url.indexOf('?') >= 0 ? (url + '&part=' + part) : (url + '?part=' + part);
+    new Ajax.Request(url, {
+      asynchronous: true,
+      evalScripts: true,
+      method: 'get'
+    })
+  },
+
   setActions: function(element, visible) {
     var actions = element.up('.task_list_container').down('.actions_menu');
     if (actions == null)
@@ -158,11 +175,12 @@ document.on('click', '#done_reordering_task_lists_link', function(e, element){
 document.observe('jenny:loaded:edit_task_list', function(evt) {
   // Reload sort
   if (TaskList.in_sort) {
-	setTimeout(function(){
+    setTimeout(function(){
       TaskList.setReorder(false);	
       TaskList.setReorder(true);
     }, 0);
   }
+  TaskList.updatePage('column');
 });
 
 document.observe('jenny:loaded:new_task_list', function(evt) {
@@ -175,6 +193,7 @@ document.observe('jenny:loaded:new_task_list', function(evt) {
   }
   setTimeout(function(){
     TaskList.updatePrimer();
+    TaskList.updatePage('column');
   }, 0);
 });
 

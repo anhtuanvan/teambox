@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
-  before_filter :find_task_list, :only => [:new,:show,:destroy,:create,:update,:reorder, :show_in_main_content]
-  before_filter :find_task, :only => [:show,:destroy,:update,:watch,:unwatch,:show_in_main_content]
+  before_filter :find_task_list, :only => [:new,:show,:destroy,:create,:update,:reorder]
+  before_filter :find_task, :only => [:show,:destroy,:update,:watch,:unwatch]
   before_filter :load_banner, :only => [:show]
   before_filter :set_page_title
 
@@ -13,6 +13,7 @@ class TasksController < ApplicationController
     respond_to do |f|
       f.html
       f.m
+      f.js   { @show_part = params[:part]; render :template => 'tasks/reload' }
       f.xml  { render :xml     => @task.to_xml }
       f.json { render :as_json => @task.to_xml }
       f.yaml { render :as_yaml => @task.to_xml }
@@ -81,16 +82,6 @@ class TasksController < ApplicationController
       task = @task_list.tasks.find(task_id)
       task.update_attribute(:position,idx.to_i)
     end
-  end
-
-  def show_in_main_content
-    @comment = @current_project.new_task_comment(@task)
-    render :partial => 'tasks/show',
-      :locals => {
-        :project => @current_project,
-        :task_list => @task_list,
-        :task => @task,
-        :comment => @comment }
   end
 
   def watch

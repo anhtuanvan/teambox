@@ -10,6 +10,8 @@
 // TODO: need post-request callbacks
 
 var Jenny = {
+	debug: false,
+	
 	toggleElement: function(el) {
 		Jenny.toggle(parseInt(el.readAttribute('new_record')),
 		             el.readAttribute('header_id'),
@@ -73,7 +75,8 @@ var Jenny = {
 		var url = form.readAttribute('action');
 		var formClass = form.readAttribute('jennytype');
 		
-		//console.log('JENNY:CB:' + formClass);
+		if (Jenny.debug)
+			console.log('JENNY:CB:' + formClass + ' -> ' + url);
 		
 	    new Ajax.Request(url, {
 	      asynchronous: true,

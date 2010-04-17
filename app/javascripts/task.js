@@ -29,50 +29,6 @@ Task = {
     })
   },
 
-  create: function(form, url) {
-    new Ajax.Request(url, {
-      asynchronous: true,
-      evalScripts: true,
-      parameters: form.serialize(),
-      onLoading: function() {
-        // show loading bubbles
-        form.down('.loading').show();
-      },
-      onSuccess: function(response){
-        form.down('.loading').hide();
-        console.log("YAARRRGH");
-        // make the form disappear
-        form.hide();
-        var new_task_link = form.up().down(".new_task_link");
-        // make the Add task link appear
-        new_task_link.show();
-        // add a new task in the task list box to the bottom
-        var list_of_tasks = form.up().down(".tasks");
-        var task_item_html = response.responseText;
-        var last_task_item = list_of_tasks.select('.task').select(Element.visible).last();
-        if ( last_task_item !== undefined ) {
-          last_task_item.insert({ after: task_item_html });
-        } else {
-          list_of_tasks.insert({ top: task_item_html });
-        }
-
-        Task.highlight_last_as_new(list_of_tasks);
-        Task.make_all_sortable();
-
-        var new_task = list_of_tasks.select('.task').last();
-        var show_in_main_content_url = new_task.readAttribute('show_in_main_content_url');
-        Task.show_in_main_content(show_in_main_content_url);
-      },
-      on403: function(response){
-        form.down('.loading').hide();
-        form.down('#task_name').focus();
-        $$(".global_navigation").first().insert({
-          after: '<div class="flash_box flash_error"><div>'+ response.responseText +'</div></div>'
-        });
-      }
-    })
-  },
-
   update: function(form, url) {
     new Ajax.Request(url, {
       asynchronous: true,
@@ -95,7 +51,6 @@ Task = {
   insertTask: function(task_list_id, archived, task_id, html) {
     var container = archived ? $(task_list_id + '_the_closed_tasks') : $(task_list_id + '_the_main_tasks');
     container.insert({bottom: html});
-    console.log("HL" + task_id);
     new Effect.Highlight(task_id, { duration: 3 });
     TaskList.updateList(task_list_id);
   },
@@ -120,27 +75,7 @@ Task = {
         //element.up('.actions_menu').show();
       }
     });
-  },
-
-  highlight_last_as_new: function(list_of_tasks) {
-    var new_task = list_of_tasks.select('.task').last();
-    list_of_tasks.select('.task').each(function(task){
-      task.removeClassName('active_new');
-    })
-    new_task.addClassName('active_new');
-  },
-
-  show_in_main_content: function(url) {
-    new Ajax.Request(url, {
-      asynchronous: true,
-      evalScripts: true,
-      method: 'get',
-      onSuccess: function(response){
-        $('content').update(response.responseText);
-      }
-    })
   }
-
 }
 
 Element.addMethods({
@@ -165,13 +100,6 @@ document.on('mouseout', '.task_list .task', 	function(e, element) {
   //$$(".task span.task_status").each(function(e){ e.show(); });
 });
 
-document.on('click', '.inline_form_update', function(e) {
-  var form = e.findElement("form");
-  var submit_url = form.readAttribute("action");
-  Task.update(form, submit_url);
-  e.stop();
-});
-
 document.on('click', 'a.taskDelete', function(e, el) {
   if (confirm(el.readAttribute('aconfirm')))
     Task.destroy(el, el.readAttribute('action_url'));
@@ -191,12 +119,14 @@ document.on('click', 'a.edit_task_link', function(e, el) {
 document.observe('jenny:loaded:new_task', function(evt) {
   setTimeout(function(){
     Task.make_all_sortable();
+    TaskList.updatePage('column');
   }, 0);
 });
 
 document.observe('jenny:loaded:edit_task', function(evt) {
   setTimeout(function(){
     Task.make_all_sortable();
+    TaskList.updatePage('column');
   }, 0);
 });
 
