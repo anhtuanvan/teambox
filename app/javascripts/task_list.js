@@ -76,7 +76,22 @@ var TaskList = {
     });	
   },
 
-  updatePage: function(part) {
+  saveColumn: function() {
+    var saved = {};
+    saved.filter_assigned = $('filter_assigned').selectedIndex;
+    saved.filter_due_date = $('filter_due_date').selectedIndex;
+    TaskList.saved = saved;
+  },
+
+  restoreColumn: function() {
+    var saved = TaskList.saved;
+    if (saved) {
+      $('filter_assigned').selectedIndex = saved.filter_assigned;
+      $('filter_due_date').selectedIndex = saved.filter_due_date;
+    }
+  },
+
+  updatePage: function(part, callback) {
     var el = $('task_lists');
     if (!el)
       el = $('show_task_list');
@@ -89,7 +104,8 @@ var TaskList = {
     new Ajax.Request(url, {
       asynchronous: true,
       evalScripts: true,
-      method: 'get'
+      method: 'get',
+      onComplete: callback
     })
   },
 
@@ -179,8 +195,9 @@ document.observe('jenny:loaded:edit_task_list', function(evt) {
       TaskList.setReorder(false);	
       TaskList.setReorder(true);
     }, 0);
-  }
-  TaskList.updatePage('column');
+  }	
+  TaskList.saveColumn();
+  TaskList.updatePage('column', TaskList.restoreColumn);
 });
 
 document.observe('jenny:loaded:new_task_list', function(evt) {
@@ -193,7 +210,8 @@ document.observe('jenny:loaded:new_task_list', function(evt) {
   }
   setTimeout(function(){
     TaskList.updatePrimer();
-    TaskList.updatePage('column');
+    TaskList.saveColumn();
+    TaskList.updatePage('column', TaskList.restoreColumn);
   }, 0);
 });
 

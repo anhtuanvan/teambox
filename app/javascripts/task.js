@@ -119,14 +119,15 @@ document.on('click', 'a.edit_task_link', function(e, el) {
 document.observe('jenny:loaded:new_task', function(evt) {
   setTimeout(function(){
     Task.make_all_sortable();
-    TaskList.updatePage('column');
+    TaskList.saveColumn();
+    TaskList.updatePage('column', TaskList.restoreColumn);
   }, 0);
 });
 
 document.observe('jenny:loaded:edit_task', function(evt) {
   setTimeout(function(){
     Task.make_all_sortable();
-    TaskList.updatePage('column');
+    TaskList.updatePage('column', TaskList.restoreColumn);
   }, 0);
 });
 
