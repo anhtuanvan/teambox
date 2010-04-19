@@ -91,8 +91,11 @@ Element.addMethods({
 })
 
 document.on('mouseover', '.task_list .task', function(e, element) {
-  element.down('img.task_drag').setAttribute('style', 'display:block');
-  //element.down('span.task_status').hide();
+  var drag = element.down('img.task_drag');
+  if (drag) {
+    drag.setAttribute('style', 'display:block');
+    //element.down('span.task_status').hide();
+  }
 });
 
 document.on('mouseout', '.task_list .task', 	function(e, element) {

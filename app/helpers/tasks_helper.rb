@@ -147,17 +147,7 @@ module TasksHelper
       :task => task,
       :user => user }
   end
-
-
-  def update_task(task)
-    page.replace task_id(:item,task.project,task.task_list,task),
-      :partial => 'tasks/task',
-      :locals => {
-        :project => task.project,
-        :task_list => task.task_list,
-        :current_target => task }
-  end
-
+  
   def update_task_assignment(task,user)
     page.replace 'assigned', render_assignment(task,user)
   end
@@ -261,9 +251,10 @@ module TasksHelper
     end
   end
 
-  def list_tasks(tasks)
+  def list_tasks(tasks,editable=true)
     render :partial => 'tasks/task',
-      :collection => tasks
+      :collection => tasks,
+      :locals => {:editable => editable}
   end
 
   def task_fields(f,project,task_list,task)
@@ -309,23 +300,14 @@ module TasksHelper
       insert_task_options(project,task_list,task)
   end
   
-  def insert_task_options(project,task_list,task)
+  def insert_task_options(project,task_list,task,editable=true)
     {:partial => 'tasks/task',
     :locals => {
       :task => task,
       :project => project,
       :task_list => task_list,
-      :current_target => nil }}
-  end
-
-  def replace_task(project,task_list,task)
-    page.replace task_id(:item,project,task_list,task),
-      :partial => 'tasks/task',
-      :locals => {
-        :project => project,
-        :task_list => task_list,
-        :task => task,
-        :current_target => task }
+      :current_target => nil,
+      :editable => editable}}
   end
 
   def replace_task_header(project,task_list,task)

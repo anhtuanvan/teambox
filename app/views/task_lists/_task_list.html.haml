@@ -4,7 +4,7 @@
     .head{:id => task_list_id(:header_index,project,task_list) }
       = task_list_index_header(project,task_list)
     %div{ :id => task_list_id(:the_main_tasks,project,task_list), :class => 'tasks open', :reorder_url => project_reorder_tasks_path(project,task_list) }
-      = list_tasks(task_list.tasks.unarchived)
+      = list_tasks(task_list.tasks.unarchived,task_list_editable?(task_list,current_user))
   - if task_list_editable?(task_list,current_user)
     .new_task
       = task_link(project,task_list)
@@ -14,4 +14,4 @@
         = link_to "archive this task list", ""
   .task_list_closed{ :id => task_list_id(:with_closed_tasks,project,task_list) }
     %div{ :id => task_list_id(:the_closed_tasks,project,task_list), :class => 'tasks closed' }
-      = list_tasks(task_list.tasks.archived)
+      = list_tasks(task_list.tasks.archived,task_list_editable?(task_list,current_user))

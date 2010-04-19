@@ -3,8 +3,9 @@
 .task{ :id => task_id(:task,project,task), :class => task_classes(task)}
   .inner
     .taskStatus	
-      %div{:style => 'height:0px;'}
-        = task_drag_link(task)
+      - if editable
+        %div{:style => 'height:0px;'}
+          = task_drag_link(task)
       = task_status(task,:content)
     .taskName{ :class => "task_item_#{task.status_name}"}
       %span.status
