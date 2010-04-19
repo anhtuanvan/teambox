@@ -1,11 +1,11 @@
 class TaskListsController < ApplicationController
-  before_filter :load_task_list, :only => [:edit,:update,:show,:destroy,:watch,:unwatch]
+  before_filter :load_task_list, :only => [:edit,:update,:show,:destroy,:watch,:unwatch,:archive]
   before_filter :load_task_lists, :only => [:index, :show]
   before_filter :load_banner, :only => [:index, :show]
-  before_filter :check_permissions, :only => [:new,:create,:edit,:update,:destroy]
+  before_filter :check_permissions, :only => [:new,:create,:edit,:update,:destroy,:archive]
   before_filter :set_page_title
 
-  cache_sweeper :task_list_panel_sweeper, :only => [:update]
+  cache_sweeper :task_list_panel_sweeper, :only => [:update,:archive]
 
   def index
     respond_to do |f|
@@ -93,6 +93,43 @@ class TaskListsController < ApplicationController
       f.js{}
     end
   end
+  
+  def archive
+    calc_onindex
+    @sub_action = 'all'
+    
+    if request.method == :put and @task_list.editable?(current_user) and !@task_list.archived
+      # Prototype for comment
+      comment_attrs = {:comment_body => params[:message]}
+      comment_attrs[:comment_body] ||= "Archived task list"
+      resolved_status = params[:status] || 3
+      
+      # Resolve all unresolved tasks
+      @task_list.tasks.each do |task|
+        if !task.archived?
+          comment = @current_project.new_comment(current_user,task,comment_attrs)
+          comment.status = resolved_status
+          comment.save!
+        end
+      end
+      
+      @task_list.archived = true
+      @task_list.save!
+      @task_list.reload
+      
+      respond_to do |f|
+        f.js{}
+      end
+    else
+      respond_to do |f|
+        f.js { render :text => 'alert("Not allowed!");'; }
+      end
+    end
+    
+    respond_to do |f|
+      f.js{}
+    end
+  end
 
   def destroy
     calc_onindex
@@ -134,6 +171,11 @@ class TaskListsController < ApplicationController
         elsif params[:sub_action] == 'archived'
           @task_lists = @current_project.task_lists.with_archived_tasks
         end
+        
+        # Resort @task_lists and put archived at the bottom
+        @task_lists_archived = @task_lists.reject {|t| !t.archived?}
+        @task_lists_active = @task_lists.reject {|t| t.archived?}
+        @task_lists = @task_lists_active + @task_lists_archived
       else
         @sub_action = 'all'
         if @current_project

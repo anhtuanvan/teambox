@@ -1,6 +1,8 @@
 var TaskList = {
   in_sort: false,
 
+  // Sortable functions
+
   makeSortable: function() {
 	TaskList.in_sort = true;
     Sortable.create('task_lists', {
@@ -22,22 +24,22 @@ var TaskList = {
 	Sortable.destroy('task_lists');
   },
 
-  destroy: function(element, url) {
-    new Ajax.Request(url, {
-      method: 'delete',
-      asynchronous: true,
-      evalScripts: true,
-      onLoading: function() {
-        TaskList.setLoading(element, true);
-      },
-      onSuccess: function(response){
-        // ...
-        setTimeout(function(){TaskList.updatePrimer();}, 0);
-      },
-      onFailure: function(response){
-        TaskList.setLoading(element, false);
-      }
-    });
+  // Inserts new list
+  insertList: function(id, content, archived) {
+    if (archived)
+      $('task_lists').insert({bottom: content});
+    else
+      $('task_lists').insert({top: content});
+    new Effect.Highlight(id, {duration:3});
+  },
+
+  // Removes an existing list
+  removeList: function(id) {
+    var el = $(id);
+    if (el)
+    {
+      el.remove();
+    }
   },
 
   // Updates task list state
@@ -58,6 +60,25 @@ var TaskList = {
       link.hide();
   },
 
+  // Destruction handler
+  destroy: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'delete',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        TaskList.setLoading(element, true);
+      },
+      onSuccess: function(response){
+        // ...
+        setTimeout(function(){TaskList.updatePrimer();}, 0);
+      },
+      onFailure: function(response){
+        TaskList.setLoading(element, false);
+      }
+    });
+  },
+
   updateForm: function(element, url) { 
     new Ajax.Request(url, {
       method: 'get',
@@ -74,6 +95,24 @@ var TaskList = {
         TaskList.setLoading(element, false);
       }
     });	
+  },
+
+  resolveAndArchive: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'put',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        TaskList.setLoading(element, true);
+      },
+      onSuccess: function(response){
+        TaskList.saveColumn();
+        TaskList.updatePage('column', TaskList.restoreColumn);
+      },
+      onFailure: function(response){
+        TaskList.setLoading(element, false);
+      }
+    });
   },
 
   saveColumn: function() {
@@ -238,6 +277,13 @@ document.on('click', 'a.taskListUpdate', function(e, el) {
 document.on('click', 'a.taskListDelete', function(e, el) {
   if (confirm(el.readAttribute('aconfirm')))
     TaskList.destroy(el, el.readAttribute('action_url'));
+  e.stop();
+});
+
+// resolve action
+document.on('click', 'a.taskListResolve', function(e, el) {
+  if (confirm(el.readAttribute('aconfirm')))
+    TaskList.resolveAndArchive(el, el.readAttribute('action_url'));
   e.stop();
 });
 

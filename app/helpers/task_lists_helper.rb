@@ -108,12 +108,18 @@ module TaskListsHelper
   end
 
   def insert_task_list(project,task_list,sub_action)
-    page.insert_html :top, "task_lists",
-      :partial => 'task_lists/task_list',
+    content = render(:partial => 'task_lists/task_list',
       :locals => {
         :project => project,
         :task_list => task_list,
-        :sub_action => sub_action }
+        :sub_action => sub_action })
+    
+    list_id = task_list_id(nil,project,task_list)
+    page.call "TaskList.insertList", list_id, content, (task_list.archived || false)
+  end
+  
+  def remove_task_list(list_id)
+    page.call "TaskList.removeList", list_id
   end
 
   def render_task_lists(project,task_lists,sub_action)
@@ -177,7 +183,10 @@ module TaskListsHelper
   end
   
   def set_date_task_list_link(project,task_list, on_index=false)
-    link_to "Set the start & end date", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'date', :on_index => (on_index ? 1 : 0))
+    link_to "Set the start & end date",
+            '#',
+            :class => 'taskListUpdate',
+            :action_url => edit_project_task_list_path(project, task_list, :part => 'date', :on_index => (on_index ? 1 : 0))
   end
   
   def task_list_date_edit(project,task_list)
@@ -197,7 +206,11 @@ module TaskListsHelper
   end
   
   def resolve_archive_task_list_link(project,task_list, on_index=false)
-    link_to "Resolve all tasks and archive", '#', :class => 'taskListResolve', :action_url => edit_project_task_list_path(project, task_list, :part => 'title')
+    return if task_list.archived
+    link_to "Resolve all tasks and archive",
+            '#', :class => 'taskListResolve',
+            :aconfirm => "Are you sure you want to do this?",
+            :action_url => archive_project_task_list_path(project, task_list, :on_index => (on_index ? 1 : 0))
   end
 
   def print_task_lists_link(project = nil)

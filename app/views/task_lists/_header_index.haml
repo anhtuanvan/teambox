@@ -6,12 +6,8 @@
   - if task_list_editable?(task_list,current_user)
     = image_tag('triangle.png', :class => 'triangle')
     .extra
-      - # TODO: This isn't implemented
       = rename_task_list_link(project,task_list, header_on_index)
-      - # TODO: This isn't implemented
       = set_date_task_list_link(project,task_list, header_on_index)
-      - # TODO: This isn't implemented
       = resolve_archive_task_list_link(project,task_list, header_on_index)
-      - # TODO: Make this unobtrusive
       = delete_task_list_link(project,task_list, header_on_index)
 = the_task_list_link(task_list)
