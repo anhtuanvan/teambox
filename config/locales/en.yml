@@ -572,6 +572,9 @@ en:
       optional: "If you starting and ending dates, this task will be displayed in the GANTT chart"
       start_on: Starts on... <i>optional</i>
       finish_on: End on... <i>optional</i>
+    filter:
+      due_date: "Display tasks with due date..."
+      assigned_to: "Display tasks assigned to..."
     link:
       new: New Task List
       edit: Edit
@@ -581,6 +584,7 @@ en:
       add_link: New Task List
       empty: No tasks in this category!
       tasks_for_all_projects: Tasks across all projects
+      tasks_for_project: Task lists for this project
     primer:
       empty: This project doesn't have any conversations yet.
       create_first: Create the first task list in this project!
@@ -591,6 +595,11 @@ en:
       item4: "<b>Review</b>. A completed task is not deleted, so you can later access its messages and files."
       footer1: "Tasks are a simple and agile way to <b>get things done</b> and let others now."
       footer2: "It's time to forget about excel planning sheets and complex GANTT charts!"
+    overview_box:
+      this_list: "This task list"
+      starts_on: "Starts on:"
+      ends_on: "Ends on:"
+      undefined: "Undefined"
     new:
       title: New Task List
       submit: Add Task List
