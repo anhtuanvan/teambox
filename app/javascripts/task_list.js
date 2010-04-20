@@ -131,14 +131,10 @@ var TaskList = {
   },
 
   updatePage: function(part, callback) {
-    var el = $('task_lists');
-    if (!el)
-      el = $('show_task_list');
-    if (!el)
-      el = $('show_task');
-    if (!el)
-      return;
+    var el = $(document.body);
     var url = el.readAttribute('reload_url');
+    if (!url)
+      return;
     url = url.indexOf('?') >= 0 ? (url + '&part=' + part) : (url + '?part=' + part);
     new Ajax.Request(url, {
       asynchronous: true,
