@@ -121,7 +121,7 @@ Comment = {
       if (now > c.date) {
         var el = $(c.id);
         if (el)
-          el.down('.actions').hide();
+          el.select('a.taction').each(function(e){ e.hide(); });
         return true;
       }
       return false;
@@ -145,10 +145,10 @@ Comment = {
         return {id: c.readAttribute('id'), date:time};
     }).reject(function(c){
         if (date >= c.date) {
-          $(c.id + '_actions').hide();
+          $$('#' + c.id + ' a.taction').each(function(e){ e.hide(); });
           return true;
         } else {
-          $(c.id + '_actions').show();
+          $$('#' + c.id + ' a.taction').each(function(e){ e.show(); });
         }
         return false;
     });

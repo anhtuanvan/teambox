@@ -136,20 +136,20 @@ module CommentsHelper
 
   def edit_comment_link(comment)
     return unless comment.user_id == current_user.id
-    link_to_remote pencil_image,
+    link_to_remote "Edit",
       :url => edit_project_comment_path(comment.project, comment),
       :loading => edit_comment_loading_action(comment),
       :method => :get,
-      :html => {:id => "edit_comment_#{comment.id}_link"}
+      :html => {:id => "edit_comment_#{comment.id}_link", :class => 'taction'}
   end
     
   def delete_comment_link(comment)
-    link_to_remote trash_image,
+    link_to_remote "Delete",
       :url => project_comment_path(comment.project, comment),
       :loading => delete_comment_loading_action(comment),
       :method => :delete,
       :confirm => t('.confirm_delete'),
-      :html => {:id => "delete_comment_#{comment.id}_link"}
+      :html => {:id => "delete_comment_#{comment.id}_link", :class => 'taction'}
   end
   
   def show_loading_comment_form(id)
