@@ -67,32 +67,32 @@ var TaskList = {
       asynchronous: true,
       evalScripts: true,
       onLoading: function() {
-        TaskList.setLoading(element, true);
+        Actions.setLoading(element, true);
       },
       onSuccess: function(response){
         // ...
         setTimeout(function(){TaskList.updatePrimer();}, 0);
       },
       onFailure: function(response){
-        TaskList.setLoading(element, false);
+        Actions.setLoading(element, false);
       }
     });
   },
 
-  updateForm: function(element, url) { 
+  updateForm: function(element, url) {
     new Ajax.Request(url, {
       method: 'get',
       asynchronous: true,
       evalScripts: true,
       onLoading: function() {
-        TaskList.setLoading(element, true);
+        Actions.setLoading(element, true);
       },
       onSuccess: function(response){
-        TaskList.setActions(element, false);
-        TaskList.setLoading(element, false);
+        Actions.setActions(element, false);
+        Actions.setLoading(element, false);
       },
       onFailure: function(response){	
-        TaskList.setLoading(element, false);
+        Actions.setLoading(element, false);
       }
     });	
   },
@@ -103,14 +103,14 @@ var TaskList = {
       asynchronous: true,
       evalScripts: true,
       onLoading: function() {
-        TaskList.setLoading(element, true);
+        Actions.setLoading(element, true);
       },
       onSuccess: function(response){
         TaskList.saveColumn();
         TaskList.updatePage('column', TaskList.restoreColumn);
       },
       onFailure: function(response){
-        TaskList.setLoading(element, false);
+        Actions.setLoading(element, false);
       }
     });
   },
@@ -144,16 +144,6 @@ var TaskList = {
     })
   },
 
-  setActions: function(element, visible) {
-    var actions = element.up('.task_list_container').down('.actions_menu');
-    if (actions == null)
-      return;
-    if (visible)
-      actions.show();
-    else
-      actions.hide();
-  },
-
   setTitle: function(element, visible) {
     var title = $(element.readAttribute('jennybase') + 'title');
     if (title == null)
@@ -162,24 +152,6 @@ var TaskList = {
       title.show();
     else
       title.hide();
-  },
-
-  setLoading: function(element, loading) {
-    var actions = element.up('.task_list_container').down('.actions_menu');
-    if (actions == null)
-      return;
-    if (loading)
-    {
-      actions.addClassName('loading');
-      actions.down('span.loading').show();
-      actions.down('span.actiondate').hide();
-    }
-    else
-    {
-      actions.removeClassName('loading');
-      actions.down('span.loading').hide();
-      actions.down('span.actiondate').show();	
-    }
   },
 
   setReorder: function(active) {
@@ -255,7 +227,7 @@ document.observe('jenny:cancel:edit_task_list', function(evt) {
   if (evt.memo.form.up('.task_list_container'))
   {
     TaskList.setTitle(evt.memo.form, true);
-    TaskList.setActions(evt.memo.form, true);
+    Actions.setActions(evt.memo.form, true);
   }
   else
   {

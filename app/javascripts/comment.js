@@ -66,6 +66,43 @@ Comment = {
       }
     });
   },
+
+  edit: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'get',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        Actions.setLoading(element, true);
+      },
+      onSuccess: function(response){
+        Actions.setActions(element, false);
+        Actions.setLoading(element, false);
+      },
+      onFailure: function(response){	
+        Actions.setLoading(element, false);
+      }
+    });
+  },
+ 
+  destroy: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'delete',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        Actions.setLoading(element, true);
+      },
+      onSuccess: function(response){
+        Actions.setActions(element, false);
+        Actions.setLoading(element, false);
+      },
+      onFailure: function(response){	
+        Actions.setLoading(element, false);
+      }
+    });
+  },
+
   watch_status: function(){
     $$('.statuses .status').each(function(e){ 
       if(e.hasClassName('open'))
@@ -158,5 +195,16 @@ Comment = {
 
 document.on('submit', 'form.new_comment', function(e, el) {
   Comment.create(el);	
+  e.stop();
+});
+
+document.on('click', 'a.commentEdit', function(e, el) {
+  Comment.edit(el, el.readAttribute('action_url'));
+  e.stop();
+});
+
+document.on('click', 'a.commentDelete', function(e, el) {
+  if (confirm(el.readAttribute('aconfirm')))
+    Comment.destroy(el, el.readAttribute('action_url'));
   e.stop();
 });
