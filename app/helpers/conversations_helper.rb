@@ -128,14 +128,12 @@ module ConversationsHelper
   def conversation_column(project,conversations,options={})
     options[:conversation] ||= nil
     options[:show_conversation_settings] ||= false
-    options[:show_comments_settings] ||= false
     
     render :partial => 'conversations/column', :locals => {
         :project => project,
         :conversations => conversations,
         :conversation => options[:conversation],
-        :show_conversation_settings =>  options[:show_conversation_settings],
-        :show_comments_settings => options[:show_comments_settings] }
+        :show_conversation_settings =>  options[:show_conversation_settings] }
   end
   
   def replace_conversation(project,conversation)
