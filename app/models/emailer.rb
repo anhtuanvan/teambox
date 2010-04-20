@@ -64,7 +64,7 @@ class Emailer < ActionMailer::Base
       reply_to      from_address("#{project.permalink}")
     end
     subject       "[#{project.permalink}] #{truncate(comment.body, :length => 20)}"
-    body          :project => project, :comment => comment
+    body          :project => project, :comment => comment, :recipient => user
   end
 
   def notify_conversation(user, project, conversation)
@@ -75,7 +75,7 @@ class Emailer < ActionMailer::Base
       reply_to      from_address("#{project.permalink}+conversation+#{conversation.id}")
     end
     subject       "[#{project.permalink}] #{conversation.name}"
-    body          :project => project, :conversation => conversation
+    body          :project => project, :conversation => conversation, :recipient => user
   end
 
   def notify_task(user, project, task)
@@ -86,7 +86,7 @@ class Emailer < ActionMailer::Base
       reply_to      from_address("#{project.permalink}+task+#{task.id}")
     end
     subject       "[#{project.permalink}] #{task.name}"
-    body          :project => project, :task => task, :task_list => task.task_list
+    body          :project => project, :task => task, :task_list => task.task_list, :recipient => user
   end
 
   def notify_task_list(user, project, task_list)
@@ -97,7 +97,7 @@ class Emailer < ActionMailer::Base
       reply_to      from_address("#{project.permalink}+task_list+#{task_list.id}")
     end
     subject       "[#{project.permalink}] #{task_list.name}"
-    body          :project => project, :task_list => task_list
+    body          :project => project, :task_list => task_list, :recipient => user
   end
 
   def daily_task_reminder(user, tasks)

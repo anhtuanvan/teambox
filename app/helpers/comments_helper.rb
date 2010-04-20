@@ -3,7 +3,7 @@ module CommentsHelper
   def comment_form_for(form_url,&proc)
     form_for form_url,
       :id => 'new_comment_form',
-      :html => {:update_id => js_id(nil,Comment.new), :preview => preview_project_comments_path(@current_project)},
+      :html => {:update_id => js_id(nil,Comment.new)},
       &proc
   end
   
@@ -22,7 +22,6 @@ module CommentsHelper
     form_for form_url, 
       :loading => loading_new_comment_form,
       :id => 'new_comment_form',
-      :html => {:preview => preview_project_comments_path(@current_project)},
       &proc
   end
 
