@@ -7,28 +7,28 @@ module ConversationsHelper
   
   def conversation_link(project,conversation)
     conversation ||= project.conversations.new
-    app_link(project,conversation)
+    unobtrusive_app_link(project,conversation)
   end
 
   def conversation_form_for(project,conversation,&proc)
-    app_form_for(project,conversation,&proc)
+    unobtrusive_app_form_for(project,conversation,&proc)
   end
 
   def conversation_submit(project,conversation)
-    app_submit(project,conversation)
-  end
-
-  def conversation_form_loading(action,project,conversation)
-    app_form_loading(action,project,conversation)
+    unobtrusive_app_submit(project,conversation)
   end
   
+  # Jenny helpers
+  
   def show_conversation(project,conversation)
-    app_toggle(project,conversation)
+    unobtrusive_app_toggle(project,conversation)
   end  
 
   def hide_conversation(project,conversation)
-    app_toggle(project,conversation)
+    unobtrusive_app_toggle(project,conversation)
   end
+  
+  #
 
   def conversation_form(project,conversation)
     render :partial => 'conversations/form', :locals => {
@@ -52,8 +52,9 @@ module ConversationsHelper
   
   def delete_conversation_link(project,conversation)
     link_to t('common.delete'), project_conversation_path(project,conversation), 
-    :confirm => t('.confirm_delete'),
-    :method => :delete
+    :aconfirm => t('.confirm_delete'),
+    :class => 'delete_conversation_link',
+    :action_url => project_conversation_path(project,conversation)
   end
   
   def conversation_header(project,conversation)

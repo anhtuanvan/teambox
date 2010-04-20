@@ -246,7 +246,7 @@ document.on('submit', 'form.edit_comment', function(e, el) {
 document.on('click', 'a.edit_comment_cancel', function(e, el) {
   e.stop();
   Comment.cancelEdit(el.up('form'));
-})
+});
 
 document.on('click', 'a.commentEdit', function(e, el) {
   e.stop();

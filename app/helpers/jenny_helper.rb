@@ -28,19 +28,6 @@ module JennyHelper
     path << element unless element.nil?
     path.join('_')
   end
-
-  def app_link(*args)
-    target, action = shes_just_a_memory(*args)
-    return unless target.editable?(current_user)
-
-    singular_name = target.class.to_s.underscore
-    plural_name = target.class.to_s.tableize
-
-    link_to_function content_tag(:span,t("#{plural_name}.link.#{action}")),
-      send("show_#{singular_name}".to_sym,*args),
-      :class => "#{action}_#{singular_name}_link",
-      :id => js_id("#{action}_link",*args)
-  end
   
   def unobtrusive_app_link(*args)
     target, action = shes_just_a_memory(*args)
@@ -53,29 +40,6 @@ module JennyHelper
     link_to content_tag(:span,t("#{plural_name}.link.#{action}")), '#',
       {:class => "jennyaction #{action}_#{singular_name}_link",
       :id => js_id("#{action}_link",*args)}.merge(send("show_#{singular_name}".to_sym,*args))
-  end
-
-  def app_toggle(*args)
-    target, action = shes_just_a_memory(*args)
-
-    header_id = js_id("#{action}_header",*args)
-    link_id   = js_id("#{action}_link",*args)
-    form_id   = js_id("#{action}_form",*args)
-
-    update_page do |page|
-      if target.new_record?
-        page.toggle(link_id)
-        page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
-      else
-        page.visual_effect(:toggle_blind,form_id,:duration => 0.3)
-        page.visual_effect(:toggle_blind,header_id,:duration => 0.3)
-      end
-      
-      page << "Form.reset('#{form_id}')"
-      page << "if($('#{form_id}').hasClassName('form_error')){ $('#{form_id}').removeClassName('form_error') }"
-      page.select("##{form_id} .error").each {|e|e.remove}
-      page << "if($('#{form_id}').getStyle('display') == 'block' && $('#{form_id}').down('.focus')){$('#{form_id}').auto_focus()}"
-    end
   end
   
   def unobtrusive_app_toggle(*args)
@@ -91,16 +55,6 @@ module JennyHelper
      :form_id => form_id}
   end
 
-  def app_submit(*args)
-    target, action = shes_just_a_memory(*args)
-
-    plural_name = target.class.to_s.tableize
-
-    submit_id = js_id("#{action}_submit",*args)
-    loading_id = js_id("#{action}_loading",*args)
-    submit_to_function t("#{plural_name}.#{action}.submit"), app_toggle(*args), submit_id, loading_id
-  end
-
   def unobtrusive_app_submit(*args)
     target, action = shes_just_a_memory(*args)
 
@@ -109,21 +63,6 @@ module JennyHelper
     submit_id = js_id("#{action}_submit",*args)
     loading_id = js_id("#{action}_loading",*args)
     submit_or_cancel target, t("#{plural_name}.#{action}.submit"), submit_id, loading_id
-  end
-
-  def app_form_for(*args,&proc)
-    raise ArgumentError, "Missing block" unless block_given?
-    target, action = shes_just_a_memory(*args)
-
-    singular_name = target.class.to_s.underscore
-
-    remote_form_for(args,
-      :loading => app_form_loading(action,*args),
-      :html => {
-        :id => js_id("#{action}_form",*args),
-        :class => "#{singular_name}_form app_form",
-        :style => 'display: none'},
-        &proc)
   end
 
   def unobtrusive_app_form_for(*args, &proc)
@@ -155,15 +94,6 @@ module JennyHelper
     target = args.last
     action = target.new_record? ? 'new' : 'edit'
     [target,action]
-  end
-
-  def app_form_loading(action,*args)
-    update_page do |page|
-      submit_id  = js_id("#{action}_submit",*args)
-      loading_id = js_id("#{action}_loading",*args)
-      page[submit_id].hide
-      page[loading_id].show
-    end
   end
 
   def show_form_errors(target,form_id)
