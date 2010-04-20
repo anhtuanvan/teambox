@@ -34,6 +34,38 @@ Comment = {
     }
     new Ajax.Request(comments_update_url, { method: 'get', parameters: $H(params).merge(comments_parameters) });
   },
+  setLoading: function(id, value) {
+    if (value)
+    {
+      $(id + '_submit').hide();
+      $(id + '_loading').show();
+    }
+    else
+    {
+      $(id + '_submit').show();
+      $(id + '_loading').hide();
+    }
+  },
+  create: function(form) {
+    var update_id = form.readAttribute('update_id');
+    new Ajax.Request(form.readAttribute('action'), {
+      asynchronous: true,
+      evalScripts: true,
+      method: form.readAttribute('method'),
+      parameters: form.serialize(),
+      onLoading: function() {
+        Comment.setLoading('comment_new', true);
+        $('new_comment').closePreview();
+      },
+      onFailure: function(response) {
+        Comment.setLoading('comment_new', false);
+      },
+      onSuccess: function(response){
+        if ($(document.body).hasClassName('show_tasks'))
+          TaskList.updatePage('column', TaskList.restoreColumn);
+      }
+    });
+  },
   watch_status: function(){
     $$('.statuses .status').each(function(e){ 
       if(e.hasClassName('open'))
@@ -123,3 +155,8 @@ Comment = {
     Comment.check_edit();
   }
 };
+
+document.on('submit', 'form.new_comment', function(e, el) {
+  Comment.create(el);	
+  e.stop();
+});

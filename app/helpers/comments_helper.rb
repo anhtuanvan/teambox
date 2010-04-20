@@ -1,9 +1,9 @@
 module CommentsHelper
 
   def comment_form_for(form_url,&proc)
-    remote_form_for form_url, 
-      :loading => loading_new_comment_form,
+    form_for form_url,
       :id => 'new_comment_form',
+      :update_id => js_id(nil,Comment.new),
       :html => {:preview => preview_project_comments_path(@current_project)},
       &proc
   end
@@ -14,14 +14,6 @@ module CommentsHelper
       :id => 'new_comment_form',
       :html => {:preview => preview_project_comments_path(@current_project)},
       &proc
-  end
-
-  def loading_new_comment_form
-    update_page do |page|
-      page[js_id(:new_submit,Comment.new)].hide
-      page[js_id(:new_loading,Comment.new)].show
-      page['new_comment'].closePreview
-    end  
   end
 
   def options_for_people(people, include_nobody = true)
