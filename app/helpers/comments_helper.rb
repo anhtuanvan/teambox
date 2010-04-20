@@ -3,8 +3,18 @@ module CommentsHelper
   def comment_form_for(form_url,&proc)
     form_for form_url,
       :id => 'new_comment_form',
-      :update_id => js_id(nil,Comment.new),
-      :html => {:preview => preview_project_comments_path(@current_project)},
+      :html => {:update_id => js_id(nil,Comment.new), :preview => preview_project_comments_path(@current_project)},
+      &proc
+  end
+  
+  def edit_comment_form_for(comment,&proc)
+    form_for [comment.project,comment],
+      :id => "comment_#{comment.id}_form",
+      :method => :put,
+      :html => {
+        :class => 'edit_comment', 
+        :update_id => js_id(nil,comment),
+        :action_cancel => project_comment_path(comment.project,comment)},
       &proc
   end
 
@@ -68,15 +78,6 @@ module CommentsHelper
     "<span class='arr target_arr'>#{connector}</span> <span class='target'>#{link}</span>" if link
   end
 
-  def comment_actions_link(comment)
-    render :partial => 'comments/actions', :locals => {
-      :comment => comment }
-  end
-  
-  def comments_settings
-    render :partial => 'comments/settings'
-  end
-
   def new_hour_comment_form(project,comment)
     render :partial => 'comments/new', 
       :locals => { :target => nil, 
@@ -128,15 +129,22 @@ module CommentsHelper
   end
   
   def cancel_edit_comment_link(comment)
-    link_to_remote t('common.cancel'),
-      :url => project_comment_path(comment.project, comment),
-      :method => :get,
-      :loading => show_loading_comment_form(comment.id)
+    link_to t('common.cancel'),
+      project_comment_path(comment.project, comment),
+      :class => 'edit_comment_cancel'
+  end
+  
+  def convert_comment_link(comment)
+    link_to "Convert to task",
+      project_comment_path(comment.project, comment),
+      :id => "convert_comment_#{comment.id}_link", 
+      :class => 'commentConvert',
+      :action_url => project_comment_path(comment.project, comment)
   end
 
   def edit_comment_link(comment)
     return unless comment.user_id == current_user.id
-    link_to "Edit",
+    link_to "Edit comment",
       edit_project_comment_path(comment.project, comment),
       :id => "edit_comment_#{comment.id}_link", 
       :class => 'commentEdit taction',
@@ -144,7 +152,7 @@ module CommentsHelper
   end
     
   def delete_comment_link(comment)
-    link_to "Delete",
+    link_to "Delete comment",
       project_comment_path(comment.project, comment),
       :id => "delete_comment_#{comment.id}_link", 
       :class => 'commentDelete taction',

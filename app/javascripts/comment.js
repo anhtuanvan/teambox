@@ -34,6 +34,7 @@ Comment = {
     }
     new Ajax.Request(comments_update_url, { method: 'get', parameters: $H(params).merge(comments_parameters) });
   },
+
   setLoading: function(id, value) {
     if (value)
     {
@@ -61,8 +62,47 @@ Comment = {
         Comment.setLoading('comment_new', false);
       },
       onSuccess: function(response){
+        Comment.setLoading('comment_new', false);
         if ($(document.body).hasClassName('show_tasks'))
           TaskList.updatePage('column', TaskList.restoreColumn);
+      }
+    });
+  },
+
+  submitEdit: function(form) {
+    var update_id = form.readAttribute('update_id');
+    new Ajax.Request(form.readAttribute('action'), {
+      method: 'put',
+      asynchronous: true,
+      evalScripts: true,
+      parameters: form.serialize(),
+      onLoading: function() {
+        Comment.setLoading(update_id, false);
+      },
+      onSuccess: function(response){
+        Comment.setLoading(update_id, false);
+        if ($(document.body).hasClassName('show_tasks'))
+          TaskList.updatePage('column', TaskList.restoreColumn);
+      },
+      onFailure: function(response){
+        Comment.setLoading(update_id, false);
+      }
+    });
+  },
+
+  cancelEdit: function(form) {
+    var update_id = form.readAttribute('update_id');
+    new Ajax.Request(form.readAttribute('action_cancel'), {
+      method: 'get',
+      asynchronous: true,
+      evalScripts: true,
+      onLoading: function() {
+        Comment.setLoading(update_id, true);
+      },
+      onSuccess: function(response){
+      },
+      onFailure: function(response){
+        Comment.setLoading(update_id, false);
       }
     });
   },
@@ -194,17 +234,27 @@ Comment = {
 };
 
 document.on('submit', 'form.new_comment', function(e, el) {
-  Comment.create(el);	
   e.stop();
+  Comment.create(el);
 });
 
-document.on('click', 'a.commentEdit', function(e, el) {
-  Comment.edit(el, el.readAttribute('action_url'));
+document.on('submit', 'form.edit_comment', function(e, el) {
   e.stop();
+  Comment.submitEdit(el);
+});
+
+document.on('click', 'a.edit_comment_cancel', function(e, el) {
+  e.stop();
+  Comment.cancelEdit(el.up('form'));
+})
+
+document.on('click', 'a.commentEdit', function(e, el) {
+  e.stop();
+  Comment.edit(el, el.readAttribute('action_url'));
 });
 
 document.on('click', 'a.commentDelete', function(e, el) {
+  e.stop();
   if (confirm(el.readAttribute('aconfirm')))
     Comment.destroy(el, el.readAttribute('action_url'));
-  e.stop();
 });
