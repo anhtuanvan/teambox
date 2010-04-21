@@ -233,6 +233,11 @@ document.on('click', 'a.commentEdit', function(e, el) {
   Comment.edit(el, el.readAttribute('action_url'));
 });
 
+document.on('click', 'a.commentConvert', function(e, el) {
+  e.stop();
+//Comment.destroy(el, el.readAttribute('action_url'));
+});
+
 document.on('click', 'a.commentDelete', function(e, el) {
   e.stop();
   if (confirm(el.readAttribute('aconfirm')))
