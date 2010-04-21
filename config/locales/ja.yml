@@ -556,6 +556,15 @@ ja:
     archived:
       title: 全てのアーカイブされたタスク
       description: You're currently looking at archived tasks. These are tasks that have been closed.
+    ####
+    archive_box:
+      unarchive_list: This task list is archived.
+    actions:
+      resolve_and_archive: "Resolve all tasks and archive"
+      confirm_resolve_and_archive: "Are you sure you want to resolve and archive this task list?"
+      archive: "archive this task list"
+      rename: "Rename task list"
+      set_dates: "Set the start & end date"
     fields:
       task_list: タスクリストはあなたのプロジェクトのマイルストーンになります。タスクリストの中にタスクを作成して、人々にアサインできます。
       name: タスクリスト名
@@ -571,6 +580,7 @@ ja:
       reorder: Reorder
       ####
       reorder_done: Done reorder
+      unarchive: Unarchive
     index:
       add_link: 新規タスクリスト
       empty: No tasks in this category!

@@ -4,7 +4,7 @@ var TaskList = {
   // Sortable functions
 
   makeSortable: function() {
-	TaskList.in_sort = true;
+    TaskList.in_sort = true;
     Sortable.create('task_lists', {
       constraint:'vertical',
       handle:'img.drag',
@@ -20,8 +20,8 @@ var TaskList = {
     });
   },
   destroySortable: function() {
-	TaskList.in_sort = false;
-	Sortable.destroy('task_lists');
+    TaskList.in_sort = false;
+    Sortable.destroy('task_lists');
   },
 
   // Inserts new list
@@ -58,6 +58,16 @@ var TaskList = {
       link.show();
     else
       link.hide();
+  },
+
+  setArchived: function(id, value) {
+    var el = $(id);
+    if (el) {
+      if (value)
+        el.addClassName('archived');
+      else
+        el.removeClassName('archived');
+    }
   },
 
   // Destruction handler
@@ -115,18 +125,43 @@ var TaskList = {
     });
   },
 
+  unarchive: function(element, url) {
+    new Ajax.Request(url, {
+      method: 'put',
+      asynchronous: true,
+      evalScripts: true,
+      parameters:'task_list[archived]=false',
+      onLoading: function() {
+        //Actions.setLoading(element, true);
+      },
+      onSuccess: function(response){
+        TaskList.saveColumn();
+        TaskList.updatePage('column', TaskList.restoreColumn);
+      },
+      onFailure: function(response){
+        //Actions.setLoading(element, false);
+      }
+    });
+  },
+
   saveColumn: function() {
     var saved = {};
-    saved.filter_assigned = $('filter_assigned').selectedIndex;
-    saved.filter_due_date = $('filter_due_date').selectedIndex;
+    if ($('filter_assigned'))
+    {
+      saved.filter_assigned = $('filter_assigned').selectedIndex;
+      saved.filter_due_date = $('filter_due_date').selectedIndex;
+    }
     TaskList.saved = saved;
   },
 
   restoreColumn: function() {
     var saved = TaskList.saved;
     if (saved) {
-      $('filter_assigned').selectedIndex = saved.filter_assigned;
-      $('filter_due_date').selectedIndex = saved.filter_due_date;
+      if (saved.filter_assigned)
+      {
+        $('filter_assigned').selectedIndex = saved.filter_assigned;
+        $('filter_due_date').selectedIndex = saved.filter_due_date;
+      }
     }
   },
 
@@ -141,7 +176,7 @@ var TaskList = {
       evalScripts: true,
       method: 'get',
       onComplete: callback
-    })
+    });
   },
 
   setTitle: function(element, visible) {
@@ -202,7 +237,7 @@ document.observe('jenny:loaded:edit_task_list', function(evt) {
       TaskList.setReorder(false);	
       TaskList.setReorder(true);
     }, 0);
-  }	
+  }
   TaskList.saveColumn();
   TaskList.updatePage('column', TaskList.restoreColumn);
 });
@@ -263,5 +298,10 @@ document.on('click', 'a.create_first_task_list_link', function(e, el) {
 document.on('click', 'a.edit_task_list_link', function(e, el) {
   e.stop();
   Jenny.toggleElement(el); // edit form on task list show
+});
+
+document.on('click', 'a.unarchive_task_list_link', function(e, el) {
+  e.stop();
+  TaskList.unarchive(el, el.readAttribute('action_url'));
 });
 

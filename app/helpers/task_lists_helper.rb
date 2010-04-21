@@ -179,11 +179,14 @@ module TaskListsHelper
   end
   
   def rename_task_list_link(project,task_list, on_index=false)
-    link_to "Rename task list", '#', :class => 'taskListUpdate', :action_url => edit_project_task_list_path(project, task_list, :part => 'title', :on_index => (on_index ? 1 : 0))
+    link_to t('task_lists.actions.rename'), 
+            '#', :class => 'taskListUpdate', 
+            :action_url => edit_project_task_list_path(project, task_list, :part => 'title', :on_index => (on_index ? 1 : 0))
   end
   
   def set_date_task_list_link(project,task_list, on_index=false)
-    link_to "Set the start & end date",
+    return if task_list.archived
+    link_to t('task_lists.actions.set_dates'),
             '#',
             :class => 'taskListUpdate',
             :action_url => edit_project_task_list_path(project, task_list, :part => 'date', :on_index => (on_index ? 1 : 0))
@@ -207,9 +210,17 @@ module TaskListsHelper
   
   def resolve_archive_task_list_link(project,task_list, on_index=false)
     return if task_list.archived
-    link_to "Resolve all tasks and archive",
+    link_to t('task_lists.actions.resolve_and_archive'),
             '#', :class => 'taskListResolve',
-            :aconfirm => "Are you sure you want to do this?",
+            :aconfirm => t('task_lists.actions.confirm_resolve_and_archive'),
+            :action_url => archive_project_task_list_path(project, task_list, :on_index => (on_index ? 1 : 0))
+  end
+  
+  def archive_task_list_link(project,task_list, on_index=false)
+    return if task_list.archived
+    link_to t('task_lists.actions.archive'),
+            '#', :class => 'taskListResolve',
+            :aconfirm => t('task_lists.actions.confirm_resolve_and_archive'),
             :action_url => archive_project_task_list_path(project, task_list, :on_index => (on_index ? 1 : 0))
   end
 
@@ -231,6 +242,17 @@ module TaskListsHelper
 
   def task_list_overview_box(task_list)
     render :partial => 'task_lists/overview_box', :locals => { :task_list => task_list }
+  end
+  
+  def task_list_archive_box(project,task_list)
+    render :partial => 'task_lists/archive_box', :locals => { :project => project, :task_list => task_list }
+  end
+  
+  def reopen_task_list_button(project,task_list)
+    link_to content_tag(:span,t("task_lists.link.unarchive")), '#',
+      {:class => "unarchive_task_list_link",
+      :id => js_id("unarchive_link",project,task_list),
+      :action_url => unarchive_project_task_list_path(project,task_list)}
   end
 
 end

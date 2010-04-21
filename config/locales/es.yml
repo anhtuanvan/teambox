@@ -554,6 +554,15 @@ es:
     archived:
       title: Todas las tareas archivadas
       description: "Estas son las tareas archivadas, al haber sido completadas o rechazadas."
+    ####
+    archive_box:
+      unarchive_list: This task list is archived.
+    actions:
+      resolve_and_archive: "Resolve all tasks and archive"
+      confirm_resolve_and_archive: "Are you sure you want to resolve and archive this task list?"
+      archive: "archive this task list"
+      rename: "Rename task list"
+      set_dates: "Set the start & end date"
     fields:
       task_list: Una lista de tareas define un hito en el proyecto. Dentro puedes crear Tareas y asignarlas a otras personas.
       name: Lista de Tareas
@@ -569,6 +578,7 @@ es:
       reorder: Reordenar
       ####
       reorder_done: Done reorder
+      unarchive: Unarchive
     index:
       add_link: Nueva lista de tareas
       empty: No hay tareas en esta categoría

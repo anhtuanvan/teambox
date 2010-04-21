@@ -29,11 +29,18 @@ Filter = {
   // Hides task lists if they don't have any visible tasks
   foldEmptyTaskLists: function() {
     $$("div.task_list").each(function(e) {
+      var container = e.up('.task_list_container');
+      if (container.hasClassName('archived'))
+      {
+        container.hide();
+        return;
+      }
+
       visible_tasks = e.select(".task").reject( function(e) {
         return e.getStyle("display") == "none";
       })
       if(visible_tasks.length == 0) {
-        e.up('.task_list_container').hide();
+        container.hide();
       }
     })
   },

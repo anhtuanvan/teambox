@@ -126,6 +126,8 @@ div.column
       color: rgb(150,150,150)
     a
       font-weight: bold
+  .archive
+    display: none
   .task
     img.task_drag
       display: none
@@ -198,12 +200,18 @@ div.column
       span
         color: rgb(200,0,0)
 
+.task_list_container.archived
+  .new_task
+    display: none
+  .archive
+    display: block
+
 #task_lists
   .task_list.archived, .task_list_container.archived
     .head
       a
         color: #ccc
-    .tasks,.new_task
+    .tasks
       display: none
 
 #tasks_for_all_projects

@@ -560,6 +560,14 @@ en:
     archived:
       title: All Archived Tasks
       description: You're currently looking at archived tasks. These are tasks that have been closed.
+    archive_box:
+      unarchive_list: This task list is archived.
+    actions:
+      resolve_and_archive: "Resolve all tasks and archive"
+      confirm_resolve_and_archive: "Are you sure you want to resolve and archive this task list?"
+      archive: "archive this task list"
+      rename: "Rename task list"
+      set_dates: "Set the start & end date"
     fields:
       title: New Task List
       task_list: A task lists defines a milestone for your project. Inside a task list you can create Tasks and assign them to people.
@@ -575,6 +583,7 @@ en:
       edit: Edit
       reorder: Reorder Task Lists
       reorder_done: Done reorder
+      unarchive: Unarchive
     index:
       add_link: New Task List
       empty: No tasks in this category!

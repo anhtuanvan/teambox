@@ -556,6 +556,15 @@ de:
     archived:
       title: Alle archivierten Aufgaben
       description: "Sie sehen momentan alle archivierten Aufgaben. Diese sind geschlossen worden."
+    ####
+    archive_box:
+      unarchive_list: This task list is archived.
+    actions:
+      resolve_and_archive: "Resolve all tasks and archive"
+      confirm_resolve_and_archive: "Are you sure you want to resolve and archive this task list?"
+      archive: "archive this task list"
+      rename: "Rename task list"
+      set_dates: "Set the start & end date"
     fields:
       task_list: "Eine Aufgabenliste definiert Meilensteine Ihres Projektes. In ihr können Aufgaben erstellt und an Teilnehmer vergeben werden."
       name: "Name der Aufgabenliste"
@@ -571,6 +580,7 @@ de:
       reorder: Neu anordnen
       ####
       reorder_done: Done reorder
+      unarchive: Unarchive
     index:
       add_link: Neue Aufgabenliste
       empty: Keine Aufgaben in dieser Kategorie!

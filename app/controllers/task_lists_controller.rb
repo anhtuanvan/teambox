@@ -1,13 +1,14 @@
 class TaskListsController < ApplicationController
-  before_filter :load_task_list, :only => [:edit,:update,:show,:destroy,:watch,:unwatch,:archive]
+  before_filter :load_task_list, :only => [:edit,:update,:show,:destroy,:watch,:unwatch,:archive,:unarchive]
   before_filter :load_task_lists, :only => [:index, :show]
   before_filter :load_banner, :only => [:index, :show]
-  before_filter :check_permissions, :only => [:new,:create,:edit,:update,:destroy,:archive]
+  before_filter :check_permissions, :only => [:new,:create,:edit,:update,:destroy,:archive,:unarchive]
   before_filter :set_page_title
 
-  cache_sweeper :task_list_panel_sweeper, :only => [:update,:archive]
+  cache_sweeper :task_list_panel_sweeper, :only => [:update,:archive,:unarchive]
 
   def index
+    @on_index = true
     respond_to do |f|
       f.html
       f.m
@@ -72,9 +73,7 @@ class TaskListsController < ApplicationController
     calc_onindex
     @task_list.update_attributes(params[:task_list])
     respond_to do |f|
-      f.js {
-        render :update_index
-      }
+      f.js {}
     end
   end
 
@@ -133,6 +132,20 @@ class TaskListsController < ApplicationController
       f.js{}
     end
   end
+  
+  def unarchive
+    calc_onindex
+    @sub_action = 'all'
+    
+    if request.method == :put and @task_list.editable?(current_user) and @task_list.archived
+      @task_list.archived = false
+      @task_list.save
+    end
+    
+    respond_to do |f|
+      f.js{ render :template => 'task_lists/update' }
+    end
+  end
 
   def destroy
     calc_onindex
@@ -182,7 +195,7 @@ class TaskListsController < ApplicationController
       else
         @sub_action = 'all'
         if @current_project
-          @task_lists = @current_project.task_lists.unarchived
+          @task_lists = @current_project.task_lists
         else
           @projects = current_user.projects.unarchived
           conditions = ["project_id IN (?)", Array(@projects).collect{ |p| p.id } ]
@@ -191,6 +204,11 @@ class TaskListsController < ApplicationController
                     sort { |a,b| (a.due_on || 1.year.from_now.to_date) <=> (b.due_on || 1.year.from_now.to_date) }
           @task_lists = []
         end
+        
+        # Resort @task_lists and put archived at the bottom
+        @task_lists_archived = @task_lists.reject {|t| !t.archived?}
+        @task_lists_active = @task_lists.reject {|t| t.archived?}
+        @task_lists = @task_lists_active + @task_lists_archived
       end
     end
 
