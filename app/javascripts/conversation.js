@@ -1,19 +1,3 @@
-Event.addBehavior({
-  "#user_all:click": function(e){
-    var target = e.element();
-    var enabled = target.checked;
-    $$('.watchers .user input').each(function(el){
-      el.checked = enabled;
-    });
-  },
-
-  ".watchers .user input:click": function(e){
-    var target = e.element();
-    if (!target.checked)
-      $('user_all').checked = false;
-  }
-});
-
 var Conversation = {
   // Destruction handler
   destroy: function(element, url) {
@@ -44,4 +28,20 @@ document.on('click', 'a.delete_conversation_link', function(e, el) {
   e.stop();
   if (confirm(el.readAttribute('aconfirm')))
     Conversation.destroy(el, el.readAttribute('action_url'));
+});
+
+document.on('click', '#user_all', function(e, el) {
+  e.stop();
+  var target = e.element();
+  var enabled = target.checked;
+  $$('.watchers .user input').each(function(el){
+    el.checked = enabled;
+  });
+});
+
+document.on('click', '.watchers .user input', function(e, el) {
+  e.stop();
+  var target = e.element();
+  if (!target.checked)
+    $('user_all').checked = false;
 });

@@ -1,23 +1,3 @@
-Event.addBehavior({
-  "#sort_uploads:click": function(e){
-    Comment.update();
-  },
-  "#sort_all:click": function(e){
-    Comment.update();
-  },
-  "#sort_hours:click": function(e){
-    Comment.update();
-  },
-  "form .showPreview button:click": function(e){
-    $(this).up('form').showPreview();
-    return false;
-  },
-  "form .showPreview a:click": function(e){
-    $(this).up('form').closePreview();
-    return false;
-  }
-});
-
 Comment = {
   update_uploads_current: function(e) {
     if (e.select('div.upload_thumbnail').length == 0)
@@ -257,4 +237,19 @@ document.on('click', 'a.commentDelete', function(e, el) {
   e.stop();
   if (confirm(el.readAttribute('aconfirm')))
     Comment.destroy(el, el.readAttribute('action_url'));
+});
+
+document.on('click', '#sort_uploads, #sort_all, #sort_hours', function(e,el) {
+  e.stop();
+  Comment.update();
+});
+
+document.on('click', 'form .showPreview button', function(e,el) {
+  e.stop();
+  $(this).up('form').showPreview();
+});
+
+document.on('click', 'form .showPreview a', function(e,el) {
+  e.stop();
+  $(this).up('form').closePreview();
 });

@@ -237,31 +237,31 @@ document.observe('jenny:cancel:edit_task_list', function(evt) {
 
 // update action
 document.on('click', 'a.taskListUpdate', function(e, el) {
-  TaskList.updateForm(el, el.readAttribute('action_url'));
   e.stop();
+  TaskList.updateForm(el, el.readAttribute('action_url'));
 });
 
 // delete action
 document.on('click', 'a.taskListDelete', function(e, el) {
+  e.stop();
   if (confirm(el.readAttribute('aconfirm')))
     TaskList.destroy(el, el.readAttribute('action_url'));
-  e.stop();
 });
 
 // resolve action
 document.on('click', 'a.taskListResolve', function(e, el) {
+  e.stop();
   if (confirm(el.readAttribute('aconfirm')))
     TaskList.resolveAndArchive(el, el.readAttribute('action_url'));
-  e.stop();
 });
 
 document.on('click', 'a.create_first_task_list_link', function(e, el) {
-  Jenny.toggleElement(el); // edit form on task list show
   e.stop();
+  Jenny.toggleElement(el); // edit form on task list show
 });
 
 document.on('click', 'a.edit_task_list_link', function(e, el) {
-  Jenny.toggleElement(el); // edit form on task list show
   e.stop();
+  Jenny.toggleElement(el); // edit form on task list show
 });
 

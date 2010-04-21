@@ -358,4 +358,15 @@ module TasksHelper
         :buttons => false }),
       :class => 'date_picker')
   end
+  
+  def embedded_date_picker(f, field)
+    content_tag(:div,
+      f.calendar_date_select(field, {
+        :embedded => true,
+        :footer => false,
+        :year_range => 2.years.ago..10.years.from_now,
+        :time => false,
+        :buttons => false }),
+      :class => 'date_picker')
+  end
 end
