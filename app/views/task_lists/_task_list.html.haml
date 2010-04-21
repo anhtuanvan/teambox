@@ -4,10 +4,11 @@
   .task_list{ :id => task_list_id(:with_main_tasks,project,task_list) }
     .head{:id => task_list_id(:header_index,project,task_list) }
       = task_list_index_header(project,task_list)
-    - if !@on_index
+    - if !header_on_index
       = task_list_archive_box(project,task_list)
     %div{ :id => task_list_id(:the_main_tasks,project,task_list), :class => 'tasks open', :reorder_url => project_reorder_tasks_path(project,task_list) }
-      = list_tasks(task_list.tasks.unarchived,task_list_editable?(task_list,current_user))
+      - if !task_list.archived
+        = list_tasks(task_list.tasks.unarchived,task_list_editable?(task_list,current_user))
   - if task_list_editable?(task_list,current_user)
     .new_task
       = task_link(project,task_list)
@@ -17,4 +18,5 @@
         = archive_task_list_link(project,task_list, header_on_index)
   .task_list_closed{ :id => task_list_id(:with_closed_tasks,project,task_list) }
     %div{ :id => task_list_id(:the_closed_tasks,project,task_list), :class => 'tasks closed' }
-      = list_tasks(task_list.tasks.archived,task_list_editable?(task_list,current_user))
+      - if !header_on_index
+        = list_tasks(task_list.tasks.archived,task_list_editable?(task_list,current_user))
