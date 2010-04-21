@@ -2,8 +2,17 @@ module CommentsHelper
 
   def comment_form_for(form_url,&proc)
     form_for form_url,
-      :id => 'new_comment_form',
       :html => {:update_id => js_id(nil,Comment.new)},
+      &proc
+  end
+  
+  def convert_comment_form_for(comment,&proc)
+    form_for [comment.project,comment],
+      :url => convert_project_comment_path(comment.project,comment),
+      :html => {
+        :id => js_id(:convert,comment.project,comment),
+        :class => 'convert_comment'
+      },
       &proc
   end
   
@@ -133,12 +142,18 @@ module CommentsHelper
       :class => 'edit_comment_cancel'
   end
   
+  def cancel_convert_comment_link(comment)
+    link_to t('common.cancel'),
+      project_path(comment.project),
+      :class => 'convert_comment_cancel'
+  end
+  
   def convert_comment_link(comment)
     link_to t('comments.actions.convert_task'),
       project_comment_path(comment.project, comment),
       :id => "convert_comment_#{comment.id}_link", 
       :class => 'commentConvert',
-      :action_url => project_comment_path(comment.project, comment)
+      :action_url => edit_project_comment_path(comment.project, comment, :part => 'task')
   end
 
   def edit_comment_link(comment)
