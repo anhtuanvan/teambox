@@ -9,15 +9,17 @@ module ActivitiesHelper
       out << "#{t('common.in_project')} "
       out <<   link_to(h(project), project_path(project))
       out << "</span>"
-      out
-    end  
+      out.html_safe
+    end
   end
   
   def activity_section(activity)
     haml_tag 'div', :class => "activity #{activity.action_type}" do
       haml_concat micro_avatar(activity.user)
-      yield activity_title(activity)
-      haml_tag 'div', posted_date(activity.created_at), :class => :date unless rss?
+      haml_tag 'div', :class => :activity_block do
+        haml_tag 'div', posted_date(activity.created_at), :class => :date unless rss?
+        yield activity_title(activity)
+      end
     end
   end
 
@@ -31,14 +33,15 @@ module ActivitiesHelper
                       create_upload
                       create_person delete_person
                       create_project
+                      create_teambox_data
                       )
 
   def list_activities(activities)
-    activities.map { |activity| show_activity(activity) }.join('')
+    activities.map { |activity| show_activity(activity) }.join('').html_safe
   end
 
   def list_threads(activities)
-    activities.map { |activity| show_threaded_activity(activity) }.join('')
+    activities.map { |activity| show_threaded_activity(activity) }.join('').html_safe
   end
 
   def show_threaded_activity(activity)
@@ -48,7 +51,9 @@ module ActivitiesHelper
         render('activities/thread', :activity => activity).to_s
       end
     else
-      Rails.cache.fetch("#{activity.cache_key}/#{current_user.locale}") { show_activity(activity).to_s }
+      Rails.cache.fetch("#{activity.cache_key}/#{current_user.locale}") do
+        show_activity(activity).to_s
+      end
     end
   end
 
@@ -93,6 +98,9 @@ module ActivitiesHelper
         :task_list => link_to_unless(plain, h(object.task_list), [activity.project, object.task_list]) }
     when 'create_task_list'
       { :task_list => link_to_unless(plain, h(object), [activity.project, object]) }
+    when 'create_teambox_data'
+      { :person => link_to_unless(plain, h(object.user.name), object.user),
+        :project => link_to_unless(plain, h(activity.project), activity.project) }
     when 'create_upload'
       text = object.description.presence || object.file_name
       { :file => link_to_unless(plain, h(text), project_uploads_path(activity.project, :anchor => dom_id(object))) }
@@ -113,7 +121,7 @@ module ActivitiesHelper
     else
       raise ArgumentError, "unknown activity type #{type}"
     end
-    t("activities.#{type}.title", values)
+    t("activities.#{type}.title", values).html_safe
   end
   
   def activity_target_url(activity)
@@ -121,7 +129,7 @@ module ActivitiesHelper
       task = activity.target
       project_task_url(activity.project, task)
     elsif activity.comment_target_type == 'Task'
-      task = activity.target.target
+      task = activity.comment_target
       project_task_url(activity.project, task)
     elsif activity.target_type == 'TaskList'
       project_task_list_url(activity.project, activity.target)
@@ -132,7 +140,7 @@ module ActivitiesHelper
     elsif activity.target_type == 'Conversation'
       project_conversation_url(activity.project, activity.target)
     elsif activity.comment_target_type == 'Conversation'
-      project_conversation_url(activity.project, activity.target.target)
+      project_conversation_url(activity.project, activity.comment_target)
     else
       project_url(activity.project, :anchor => "activity_#{activity.id}")
     end
@@ -188,21 +196,14 @@ module ActivitiesHelper
     else
       raise "unexpected location #{location_name}"
     end
-    link_to_remote content_tag(:span, t('common.show_more')),
-      :url => url,
-      :loading => activities_paginate_loading,
-      :html => {
-        :class => 'activity_paginate_link button',
-        :id => 'activity_paginate_link' }
+    link_to(content_tag(:span, t('common.show_more')),
+            url,
+            :remote => true,
+            :class => 'activity_paginate_link button',
+            :id => 'activity_paginate_link'
+            )
   end
   
-  def activities_paginate_loading
-    update_page do |page|
-      page['activity_paginate_link'].hide
-      page['activity_paginate_loading'].show
-    end
-  end
-
   def show_more(after)
     update_page do |page|
       page['activities'].insert list_activities(@activities)

@@ -63,6 +63,8 @@ class TeamboxData
           project_data['permalink'] += "-#{rand}"
         end
         @project = unpack_object(Project.new, project_data, [])
+        @project.is_importing = true
+        @project.import_activities = []
         @project.user = resolve_user(project_data['owner_user_id'])
         @project.organization = @organization_map[project_data['organization_id']] || @project.user.organizations.first
         @project.save!
@@ -142,9 +144,35 @@ class TeamboxData
         end
         
         @processed_objects[:project] << @project.id
+        @project
       end
       
       self.projects = @processed_objects[:project]
+      
+      # Restore all activities
+      @projects.map(&:import_activities).flatten.sort_by{|a|a[:date]}.each do |activity|
+        if activity[:target_type] == Comment
+          # touch activity related to that comment's thread
+          Activity.last(:conditions => ["target_type = ? AND target_id = ?",
+                                        activity[:comment_target_type], activity[:comment_target_id]]).try(:touch)
+        end
+        act = Activity.new(
+          :project_id => activity[:project].id,
+          :target_id => activity[:target_id],
+          :target_type => activity[:target_class].to_s,
+          :action => activity[:action],
+          :user_id => activity[:creator_id],
+          :comment_target_type => activity[:comment_target_type],
+          :comment_target_id => activity[:comment_target_id])
+        act.created_at = activity[:date]
+        act.updated_at = activity[:date]
+        act.save!
+      end
+      
+      @projects.each do |project|
+        project.is_importing = false
+        project.log_activity(self, 'create', user.id) if user
+      end
     end
   end
   
@@ -162,7 +190,7 @@ class TeamboxData
         obj.user_id = resolve_user(data['user_id']).id if data['user_id']
       end
       if obj.respond_to? :assigned_id
-        obj.assigned_id = resolve_person(data['assigned_id']).id if data['assigned_id']
+        obj.assigned_id = resolve_person(data['assigned_id']).try(:id) if data['assigned_id']
       end
       obj.watchers_ids = data['watchers'].map{|u| @imported_users[u].try(:id)}.compact if data['watchers']
       obj.created_at = data['created_at'] if data['created_at']
@@ -174,7 +202,8 @@ class TeamboxData
     return if comments.nil?
     comments.each do |comment_data|
       comment = unpack_object(@project.comments.build, comment_data)
-      comment.assigned_id = resolve_person(comment_data['assigned_id']).id if data['assigned_id']
+      comment.is_importing = true
+      comment.assigned_id = resolve_person(comment_data['assigned_id']).try(:id) if data['assigned_id']
       comment.target = obj
       comment.save!
       import_log(comment)
@@ -186,7 +215,8 @@ class TeamboxData
     return if comments.nil?
     comments.each do |comment_data|
       comment = unpack_object(task.comments.build, comment_data)
-      comment.assigned_id = resolve_person(comment_data['assigned_id']).id if data['assigned_id']
+      comment.is_importing = true
+      comment.assigned_id = resolve_person(comment_data['assigned_id']).try(:id) if data['assigned_id']
       task.updating_user = comment.user
       task.updating_date = comment.created_at
       task.save!

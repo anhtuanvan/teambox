@@ -31,7 +31,11 @@
             = comment_task_due_on(comment)
           - if comment.hours?
             = content_tag(:span, human_hours(comment.hours), :class => :hours)
-        
+          - if simpleconv
+            %span.in_project
+              = t('.commented_in_project', :user => '', :project => '')
+              = link_to(comment.project, comment.project, :class => :project) + ": "
+
         - if comment.task_comment? and comment.assigned_transition?
           %p.assigned_transition
             - if comment.assigned_id?
@@ -39,7 +43,7 @@
             - else
               = t('tasks.assigned.unassigned')
         
-        ~ comment.body_html
+        ~raw comment.body_html
 
       - if comment.uploads.any?
         - if comment.uploads.all? { |upload| upload.image? }
@@ -48,4 +52,9 @@
         - else
           .upload_list
             = list_uploads_inline(comment.uploads)
+      
+      - if comment.google_docs.any?
+        %ul.google_docs_list
+          = render :partial => 'google_docs/file', :collection => comment.google_docs, :as => :google_doc
+          
     .clear

@@ -19,25 +19,24 @@ document.on('keyup', '.task_header + .edit_task', function(e, form) {
 })
 
 document.on('ajax:failure', 'form.new_task.app_form', function(e, form) {
-  var message = e.memo.responseJSON.first()[1]
-  form.down('div.text_field').insertOrUpdate('p.error', message)
+  var message = $H(e.memo.responseJSON)
+	message.each( function(error) {
+		form.down('div.text_field').insertOrUpdate('p.error', error.value)
+	})
 })
 
 document.on('ajax:success', '.task_header + form.edit_task', function(e, form) {
-  var name = form.down('input[name="task[name]"]').getValue(),
-      dueDate = form.down('span.localized_date').innerHTML
-
+  var name = form.down('input[name="task[name]"]').getValue()
   form.up('.content').select('.task_header h2, .task .thread_title a.task').invoke('update', name)
-  $('column').down('.due_on').update(dueDate)
-  
+
   hideEditTaskFormAndShowHeader(form)
 })
 
 // update task counter
 document.on('ajax:success', 'form.edit_task', function(e, form) {
-	var task_data = e.memo.headerJSON
-	counter = $$('.task_counter[data-task-id='+ task_data.id +']').first()
-  counter.update(parseInt(counter.innerHTML) + 1)
+  var task_data = e.memo.headerJSON
+  var counter = $$('.task_counter[data-task-id='+ task_data.id +']').first()
+  if (counter) counter.update(parseInt(counter.innerHTML) + 1)
 })
 
 document.on('click', '.date_picker', function(e, element) {
@@ -76,7 +75,7 @@ Task = {
       constraint: 'vertical',
       containment: all_task_ids,
       // format: /.*task_(\d+)_task_task/,
-      handle: 'img.task_drag',
+      handle: 'task_drag',
       dropOnEmpty: true,
       // that makes the task disappear when it leaves its original task list
       // only:'task',
@@ -115,7 +114,28 @@ Task = {
     var container = archived ? $(task_list_id + '_the_closed_tasks') : $(task_list_id + '_the_main_tasks');
     container.innerHTML = html;
     TaskList.updateList(task_list_id);
+  },
+
+  insertAssignableUsers: function() {
+    if (typeof _people == "object") {
+      $$('form.new_comment.edit_task .task_actions select#task_assigned_id, form.new_comment.edit_conversation .conversation_actions select#conversation_assigned_id, #new_task select#task_assigned_id').each(function(select) {
+        var project_id = select.up('form').readAttribute('data-project-id')
+        if (!select.descendants().any()) {
+          select.insert(new Element('option').insert(task_unassigned))
+        }
+        if (typeof _people[project_id] == "object") {
+          _people[project_id].each(function(person) {
+            if (!select.select('[value=' + person[0] + ']').any()) {
+              var option = new Element('option', { 'value': person[0] }).insert(person[2])
+              if (select.readAttribute('data-assigned') == person[0]) option.selected = true
+              select.insert(option)
+            }
+          })
+        }
+      })
+    }
   }
+
 }
 
 document.on('click', 'a.show_archived_tasks_link', function(e, el) {
@@ -132,29 +152,44 @@ document.on('click', 'a.show_archived_tasks_link', function(e, el) {
 
 document.on('ajax:success', '.new_task form', function(e){
   setTimeout(function(){
+    Task.highlight_my_tasks();
     Task.make_all_sortable();
     TaskList.saveColumn();
     TaskList.updatePage('column', TaskList.restoreColumn);
   }, 0);
 })
 
-document.observe('jenny:loaded:edit_task', function(evt) {
-  setTimeout(function(){
-    Task.make_all_sortable();
-    TaskList.updatePage('column', TaskList.restoreColumn);
-  }, 0);
-});
-
-document.observe('jenny:cancel:edit_task', function(evt) {
-  $('show_task').down(".task_header").show();
-});
-
 // Enable task sort on load and highlight my tasks
 document.observe('dom:loaded', function(e) {
   if(typeof(my_user) == "undefined") return
 
-  if ($$('.tasks').length > 0) Task.make_all_sortable();
-  Task.highlight_my_tasks();
-  Filter.updateCounts(false);
-  Filter.updateFilters();
+  if ($$('.tasks').length > 0 && !$('tasks_for_all_projects')) {
+    Task.make_all_sortable()
+  }
+  Task.highlight_my_tasks()
+  Filter.populatePeopleForTaskFilter()
+  Filter.updateCounts(false)
+  Filter.updateFilters()
+  Task.insertAssignableUsers()
 });
+
+document.on('ajax:success', 'form.edit_task', function(e, form) {
+  var person = form['task[assigned_id]'].value
+  var status = form['task[status]'] && form['task[status]'].value
+  var task = form.up('.thread')
+  var task_count = Number($('open_my_tasks').innerHTML),
+      is_assigned_to_me = (status == 1) && my_projects[person]
+      was_assigned_to_me = form.readAttribute('data-mine')
+
+  form.writeAttribute('data-mine', String(Boolean(is_assigned_to_me)))
+
+  if (is_assigned_to_me && !(was_assigned_to_me=='true')){
+      task_count += 1
+  }
+  if ((was_assigned_to_me=='true') && !is_assigned_to_me){
+      task_count -= 1
+  }
+  $('open_my_tasks').update(task_count)
+
+})
+

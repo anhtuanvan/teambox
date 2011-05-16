@@ -1,10 +1,12 @@
 class TeamboxData < ActiveRecord::Base
+  include Immortal
+
   belongs_to :user
   concerned_with :serialization, :attributes, :teambox, :basecamp
   
   attr_accessible :project_ids, :type_name, :import_data, :user_map, :target_organization, :service
   
-  before_validation_on_create :set_service
+  before_validation :set_service, :on => :create
   before_create :check_state
   after_create  :post_check_state
   after_update  :post_check_state
@@ -28,11 +30,11 @@ class TeamboxData < ActiveRecord::Base
       end
       
       # All users need to be known to the owner
-      users = user.organizations.map{|o| o.users + o.users_in_projects }.flatten.compact.map(&:login)
+      users = user.users_for_user_map.map(&:login)
       
       user_map.each do |login,dest_login|
         if !users.include?(dest_login)
-          @errors.add "user_map_#{login}", "#{dest_login} Not known to user #{users.inspect} [#{user_map.inspect}]"
+          @errors.add "user_map_#{login}", "#{dest_login} Not known to user"
         end
       end
     end
@@ -116,16 +118,16 @@ class TeamboxData < ActiveRecord::Base
   
   def post_check_state
     if type_name == :export
-      Emailer.send_with_language(:notify_export, user.locale, self) if @dispatch_notification
+      Emailer.send_with_language(:notify_export, user.locale, self.id) if @dispatch_notification
       TeamboxData.send_later(:delayed_export, self.id) if @dispatch_export
     elsif type_name == :import
       store_import_data if @do_store_import_data
+      Emailer.send_with_language(:notify_import, user.locale, self.id) if @dispatch_notification
     end
   end
   
   def do_import
     self.processed_at = Time.now
-    do_deliver = ActionMailer::Base.perform_deliveries
     next_status = :imported
     
     begin
@@ -136,7 +138,6 @@ class TeamboxData < ActiveRecord::Base
       
       throw Exception.new("Import is invalid") if !valid?
       
-      ActionMailer::Base.perform_deliveries = false
       if service == 'basecamp'
         unserialize_basecamp({'User' => user_map, 'Organization' => org_map})
       else
@@ -144,26 +145,27 @@ class TeamboxData < ActiveRecord::Base
       end
     rescue Exception => e
       # Something went wrong?!
-      Rails.logger.warn "#{user} imported an invalid dump (#{self.id})"
+      Rails.logger.warn "#{user} imported an invalid dump (#{self.id}) #{e.inspect}"
       self.processed_at = nil
       next_status = :uploading
     end
     
     self.status_name = next_status
-    ActionMailer::Base.perform_deliveries = do_deliver
     clear_import_data
-    save unless new_record? or @check_state
+    @dispatch_notification = true
     
-    Emailer.send_with_language(:notify_import, user.locale, self)
+    save unless new_record? or @check_state
   end
   
   def do_export
     self.processed_at = Time.now
     @data = serialize(organizations_to_export, projects, users_to_export)
-    upload = ActionController::UploadedStringIO.new
-    upload.write(@data.to_json)
-    upload.seek(0)
-    upload.original_path = "#{user.login}-export.json"
+    upload_data = Tempfile.new("#{user.login}-export")
+    upload_data.write(@data.to_json)
+    upload_data.seek(0)
+    upload = ActionDispatch::Http::UploadedFile.new(:type => 'application/json',
+                                                    :filename => "#{user.login}-export.json",
+                                                    :tempfile => upload_data)
     self.processed_data = upload
     self.status_name = :exported
     @dispatch_notification = true
@@ -196,27 +198,26 @@ class TeamboxData < ActiveRecord::Base
     (imported? or exported?) and processed_at.nil?
   end
   
-  def project_ids=(value)
-    write_attribute :project_ids, Array(value).map(&:to_i).compact
-  end
-  
-  def projects
-    if user
-      Project.find(:all, :conditions => {:id => project_ids, :organization_id => user.admin_organization_ids})
-    else
-      Project.find(:all, :conditions => {:id => project_ids})
-    end
-  end
-  
-  def organizations_to_export
-    if user
-      Organization.find(:all, :conditions => {:projects => {:id => project_ids, :organization_id => user.admin_organization_ids}}, :joins => [:projects])
-    else
-      Organization.find(:all, :conditions => {:projects => {:id => project_ids}}, :joins => [:projects])
-    end
-  end
-  
   def users_to_export
     organizations_to_export.map{|o| o.users + o.users_in_projects }.flatten.compact
+  end
+  
+  def to_api_hash(options = {})
+    base = {
+      :id => id,
+      :data_type => type_name,
+      :service => service,
+      :status => status_name,
+      :user_id => user_id,
+      :processed_at => processed_at,
+      :created_at => created_at.to_s(:api_time)
+    }
+    
+    base[:processed_at] = processed_at.to_s(:api_time) if processed_at
+    base[:target_organization] = target_organization if target_organization
+    base[:project_ids] = project_ids if project_ids
+    base[:type] = self.class.to_s if options[:emit_type]
+    
+    base
   end
 end

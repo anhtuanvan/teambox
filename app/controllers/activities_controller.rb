@@ -10,28 +10,34 @@ class ActivitiesController < ApplicationController
     @last_activity = @threads.all.last
 
     respond_to do |format|
-      format.html { redirect_to projects_path }
+      format.html do
+        if params[:nolayout]
+          @new_conversation = Conversation.new(:simple => true)
+          @projects = current_user.projects.unarchived
+          render :layout => false
+        else
+          redirect_to projects_path
+        end
+      end
       format.m
       format.xml  { render :xml     => @activities.to_xml }
       format.json { render :as_json => @activities.to_xml }
       format.yaml { render :as_yaml => @activities.to_xml }
-      format.frag do
-        @new_conversation = Conversation.new(:simple => true)
-        @projects = current_user.projects.unarchived
-        render :layout => false
-      end
     end
   end
 
   def show_more
-    @activities = Activity.for_projects(@target).before(params[:id])
-    @activities = @activities.from_user(@user) if @user
+    @activities = if @user
+      Activity.for_projects(@target).before(params[:id]).from_user(@user)
+    else
+      Activity.for_projects(@target).before(params[:id])
+    end
     @threads = @activities.threads
     @last_activity = @threads.all.last
 
     respond_to do |format|
       format.html { redirect_to projects_path }
-      format.js
+      format.js   { render :layout  => false }
       format.xml  { render :xml     => @activities.to_xml }
       format.json { render :as_json => @activities.to_xml }
       format.yaml { render :as_yaml => @activities.to_xml }
@@ -45,7 +51,7 @@ class ActivitiesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to projects_path }
-      format.js
+      format.js { render :layout => false }
       format.xml  { render :xml     => @activities.to_xml }
       format.json { render :as_json => @activities.to_xml }
       format.yaml { render :as_yaml => @activities.to_xml }
@@ -57,14 +63,12 @@ class ActivitiesController < ApplicationController
     target = params[:thread_type].constantize.find params[:id]
 
     @comments = target.comments
-    # TODO: ask why
-    @comments.pop if target.is_a?(Conversation) and target.simple?
     
     respond_to do |format|
       format.html {
         if request.xhr?
           render :partial => 'comments/comment',
-            :collection => @comments.reverse, # regular chronological order
+            :collection => @comments.reverse,
             :locals => { :threaded => true }
         end
       }
